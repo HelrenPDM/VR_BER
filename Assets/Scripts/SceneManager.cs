@@ -146,7 +146,6 @@ public class SceneManager : MonoBehaviour {
 	{
 		// set parent GO
 		Player = GameObject.Find("SceneCharacter");
-		CameraRig = GameObject.Find(cameraGO);
 
 		if (Player != null)
 		{
@@ -156,15 +155,6 @@ public class SceneManager : MonoBehaviour {
 			          " Y: " + p.y +
 			          " Z: " + p.z);
 			Player.transform.position = p;
-			if (body)
-			{
-				p.y += PlayerHeight;
-			}
-			CameraRig.transform.position = p;
-			Vector3 euler = Vector3.zero;
-			Player.transform.rotation = Quaternion.Euler(euler);
-			CameraRig.transform.localRotation = Quaternion.Euler(euler);
-
 			Debug.Log ("Trying to instantiate " + controllerGO);
 			#if UNITY_ANDROID && !UNITY_EDITOR
 			Player = GameObject.Instantiate(Resources.Load (controllerGO) as GameObject);
@@ -204,6 +194,16 @@ public class SceneManager : MonoBehaviour {
 				Player.AddComponent<VMEPlayerController>();
 				Player.GetComponent<VMEPlayerController>().CenterRayTracker.Scene += handleSceneEvent;
 			}
+
+			CameraRig = GameObject.Find(cameraGO);
+			if (body)
+			{
+				p.y += PlayerHeight;
+			}
+			CameraRig.transform.position = p;
+			Vector3 euler = Vector3.zero;
+			Player.transform.rotation = Quaternion.Euler(euler);
+			CameraRig.transform.localRotation = Quaternion.Euler(euler);
 
 			SetUpUI(CameraRig.transform, "HUD", 0f, 0f, 0.5f);
 
@@ -252,9 +252,9 @@ public class SceneManager : MonoBehaviour {
 		Destroy(Player.GetComponent<CharacterController>());
 		// configure character controller
 		#if UNITY_STANDALONE
-		SetUpController(OVRControllerPrefab,"CenterEyeAnchor", locationGO.name, body);
+		SetUpController(OVRControllerPrefab,"CenterEyeAnchor", args.NextSpot.name, args.NextBody);
 		#elif UNITY_ANDROID && !UNITY_EDITOR
-		SetUpController(CardboardControllerPrefab,"Main Camera", locationGO.name, body);
+		SetUpController(CardboardControllerPrefab,"Main Camera", args.NextSpot.name, args.NextBody);
 		#else
 		SetUpController(StandardController,"StandardCamera", args.NextSpot.name, args.NextBody);
 		#endif
