@@ -43,7 +43,7 @@ public class VMEPlayerController : MonoBehaviour {
 	public VMECameraRayTracker CenterRayTracker = new VMECameraRayTracker();
 
 	// for input modes
-	public bool MoveMode = true;
+	public bool MoveMode = false;
 	public bool ScriptedMove = false;
 
 	private Transform ScriptTarget = null;
@@ -122,11 +122,16 @@ public class VMEPlayerController : MonoBehaviour {
 			else
 			{
 				FocusObjectInGUI("");
-				GazePointerColor(CenterRayTracker.FocusLockPercentage, 0f);
+				GazePointerColor(0.5f, 0f);
 			}
 
 			GazePointerPositionAndScale(CenterRayTracker.TargetObjectHitPoint,
 			                            CenterRayTracker.TargetObjectDistance);
+		}
+		else
+		{
+			FocusObjectInGUI("");
+			GazePointerColor(CenterRayTracker.FocusLockPercentage, 0f);
 		}
 
 		if (CenterRayTracker.TargetObject != null &&
@@ -148,6 +153,10 @@ public class VMEPlayerController : MonoBehaviour {
 			}
 			else
 			{
+				if (m_Agent == null)
+				{
+					m_Agent = gameObject.GetComponent<NavMeshAgent>();
+				}
 				// If there is a hit and object ray hit is set to trigger movement, trigger going forward
 				if (CenterRayTracker.TargetObject.CompareTag ("UIButton3D"))
 				{
@@ -156,10 +165,6 @@ public class VMEPlayerController : MonoBehaviour {
 					case "Continue":
 						this.ScriptTarget = CenterRayTracker.TargetObject.GetComponent<VMENextInfoPoint>().target;
 						DebugInGUI ("NextStop: \n" + this.ScriptTarget);
-						if (m_Agent == null)
-						{
-							m_Agent = gameObject.GetComponent<NavMeshAgent>();
-						}
 						m_Agent.destination = this.ScriptTarget.position;
 						break;
 					default:
@@ -179,18 +184,21 @@ public class VMEPlayerController : MonoBehaviour {
 
 	private void CheckNavMeshAgent()
 	{
-		m_Agent = gameObject.GetComponent<NavMeshAgent>();
-		if(m_Agent == null && MoveMode)
+		if (MoveMode)
 		{
-			Debug.LogWarning("VMEPlayerController: No NavMeshAgent attached.");
-			this.MoveMode = false;
-		}
-		else
-		{
-			m_Agent.baseOffset = 0.0f;
-			m_Agent.autoTraverseOffMeshLink = true;
-			m_Agent.updateRotation = false;
-			m_Agent.height = 1.8f;
+			if(gameObject.GetComponent<NavMeshAgent>() == null)
+			{
+				Debug.LogWarning("VMEPlayerController: No NavMeshAgent attached.");
+				this.MoveMode = false;
+			}
+			else
+			{
+				m_Agent = gameObject.GetComponent<NavMeshAgent>();
+				m_Agent.baseOffset = 0.0f;
+				m_Agent.autoTraverseOffMeshLink = true;
+				m_Agent.updateRotation = false;
+				m_Agent.height = 1.8f;
+			}
 		}
 	}
 
