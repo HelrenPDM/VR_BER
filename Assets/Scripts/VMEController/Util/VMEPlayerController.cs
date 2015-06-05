@@ -194,10 +194,10 @@ public class VMEPlayerController : MonoBehaviour {
 			else
 			{
 				m_Agent = gameObject.GetComponent<NavMeshAgent>();
-				m_Agent.baseOffset = 0.0f;
+				m_Agent.baseOffset = 0.1f;
 				m_Agent.autoTraverseOffMeshLink = true;
 				m_Agent.updateRotation = false;
-				m_Agent.height = 1.8f;
+				m_Agent.height = 1.7f;
 			}
 		}
 	}

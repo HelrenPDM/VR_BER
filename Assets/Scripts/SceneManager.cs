@@ -89,7 +89,7 @@ public class SceneManager : MonoBehaviour {
 
 		// configure character controller
 		#if UNITY_STANDALONE
-		SetUpController(OVRControllerPrefab,"CenterEyeAnchor", "VMEStart", false);
+		SetUpController(OVRControllerPrefab,"CenterEyeAnchor", "VMEMainHall", false);
 		#elif UNITY_ANDROID
 		SetUpController(CardboardControllerPrefab,"Main Camera", "VMEStart", false);
 		#elif UNITY_EDITOR && UNITY_WEBGL
@@ -154,7 +154,7 @@ public class SceneManager : MonoBehaviour {
 			Debug.Log("Start at X: " + p.x +
 			          " Y: " + p.y +
 			          " Z: " + p.z);
-			#if UNITY_ANDROID && !UNITY_EDITOR
+			#if UNITY_ANDROID
 			if (this.Player.transform.name != "CardboardMain")
 			{
 				Debug.Log ("Trying to instantiate " + controllerGO);
@@ -222,10 +222,12 @@ public class SceneManager : MonoBehaviour {
 				CameraRig = GameObject.Find(cameraGO);
 			}
 
+			#if !UNITY_STANDALONE || !UNITY_ANDROID
 			if (body)
 			{
 				p.y += PlayerHeight;
 			}
+			#endif
 			CameraRig.transform.position = p;
 			Vector3 euler = Vector3.zero;
 			Player.transform.rotation = Quaternion.Euler(euler);
@@ -281,10 +283,12 @@ public class SceneManager : MonoBehaviour {
 				this.Player.GetComponent<VMEPlayerController>().MoveMode = false;
 			}
 
+			#if !UNITY_STANDALONE || !UNITY_ANDROID
 			if (body)
 			{
 				p.y += PlayerHeight;
 			}
+			#endif
 
 			CameraRig.transform.position = p;
 			Vector3 euler = Vector3.zero;
