@@ -2,13 +2,14 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/VMEController/Util/VMEPlayerController.cs">
     <Files>
-      <File FileName="Assets/Scripts/SceneManager.cs" Line="197" Column="4" />
-      <File FileName="Assets/Scripts/VMEController/Util/VMERenderObject.cs" Line="28" Column="1" />
-      <File FileName="Assets/Scripts/VMEController/Util/VMEPlayerController.cs" Line="168" Column="1" />
-      <File FileName="Assets/Scripts/VMEController/Util/VMECameraRayTracker.cs" Line="142" Column="1" />
-      <File FileName="Assets/Scripts/VMEController/Util/VMEFocusTimer.cs" Line="79" Column="25" />
+      <File FileName="Assets/Scripts/SceneManager.cs" Line="324" Column="55" />
+      <File FileName="Assets/Scripts/VMEController/Util/VMERenderObject.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/VMEController/Util/VMEPlayerController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/VMEController/Util/VMECameraRayTracker.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/VMEController/Util/VMEFocusTimer.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/VMEController/Util/GazePointer.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/VMEController/Util/VMENextSpot.cs" Line="13" Column="1" />
+      <File FileName="Assets/Scripts/VMEController/Util/VMENextSpot.cs" Line="1" Column="1" />
+      <File FileName="Assets/Resources/OVR/Scripts/OVRManager.cs" Line="398" Column="44" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

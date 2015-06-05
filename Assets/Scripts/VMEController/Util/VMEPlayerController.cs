@@ -222,7 +222,7 @@ public class VMEPlayerController : MonoBehaviour {
 		#if UNITY_ANDROID && !UNITY_EDITOR
 		if (m_PlayerController.GetComponent<Cardboard>().UpdateState())
 		{
-			m_PlayerController.transform.rotation = PlayerController.GetComponent<Cardboard>().HeadRotation;
+			m_PlayerController.transform.rotation = m_PlayerController.GetComponent<Cardboard>().HeadRotation;
 		}
 		#endif
 	}

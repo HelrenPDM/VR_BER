@@ -90,9 +90,9 @@ public class SceneManager : MonoBehaviour {
 		// configure character controller
 		#if UNITY_STANDALONE
 		SetUpController(OVRControllerPrefab,"CenterEyeAnchor", "VMEStart", false);
-		#elif UNITY_ANDROID && !UNITY_EDITOR
+		#elif UNITY_ANDROID
 		SetUpController(CardboardControllerPrefab,"Main Camera", "VMEStart", false);
-		#else
+		#elif UNITY_EDITOR && UNITY_WEBGL
 		SetUpController(StandardController,"StandardCamera", "VMEStart", false);
 		#endif
 	}
@@ -321,13 +321,7 @@ public class SceneManager : MonoBehaviour {
 	{
 		Debug.Log("SceneManager: Reloading Player at new position with body " + args.NextBody.ToString() + ".");
 		// configure character controller
-		#if UNITY_STANDALONE
 		UpdateController(args.NextSpot.name, args.NextBody);
-		#elif UNITY_ANDROID && !UNITY_EDITOR
-		UpdateController(args.NextSpot.name, args.NextBody);
-		#else
-		UpdateController(args.NextSpot.name, args.NextBody);
-		#endif
 	}
 
 }
