@@ -68,7 +68,7 @@ public class VMEPlayerController : MonoBehaviour {
 		DebugInGUI("");
 
 		#if UNITY_ANDROID && !UNITY_STANDALONE
-		m_PlayerController = GameObject.Find ("SceneCharacter").GetComponent<CharacterController>();
+		m_PlayerController = gameObject.GetComponent<CharacterController>();
 		if(m_PlayerController == null)
 			Debug.LogWarning("VMEPlayerController: No CharacterController attached.");
 		#else
@@ -76,8 +76,6 @@ public class VMEPlayerController : MonoBehaviour {
 		if(m_PlayerController == null)
 			Debug.LogWarning("VMEPlayerController: No CharacterController attached.");
 		#endif
-
-		CheckNavMeshAgent();
 
 		#if UNITY_STANDALONE
 		m_CameraRig = GameObject.Find("OVRCameraRig").GetComponent<OVRCameraRig>().leftEyeCamera;
@@ -180,26 +178,6 @@ public class VMEPlayerController : MonoBehaviour {
 					DebugInGUI ("NextStop: \n" + this.ScriptTarget);
 					m_Agent.destination = this.ScriptTarget.position;
 				}
-			}
-		}
-	}
-
-	private void CheckNavMeshAgent()
-	{
-		if (MoveMode)
-		{
-			if(gameObject.GetComponent<NavMeshAgent>() == null)
-			{
-				Debug.LogWarning("VMEPlayerController: No NavMeshAgent attached.");
-				this.MoveMode = false;
-			}
-			else
-			{
-				m_Agent = gameObject.GetComponent<NavMeshAgent>();
-				m_Agent.baseOffset = 0.0f;
-				m_Agent.autoTraverseOffMeshLink = true;
-				m_Agent.updateRotation = false;
-				m_Agent.height = 1.8f;
 			}
 		}
 	}

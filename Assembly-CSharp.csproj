@@ -135,6 +135,7 @@
      <Compile Include="Assets\Resources\Standard Assets\Utility\WaypointCircuit.cs" />
      <Compile Include="Assets\Resources\Standard Assets\Utility\WaypointProgressTracker.cs" />
      <Compile Include="Assets\Scripts\SceneManager.cs" />
+     <Compile Include="Assets\Scripts\SmokeTunnel.cs" />
      <Compile Include="Assets\Scripts\VMEController\SceneCharacter.cs" />
      <Compile Include="Assets\Scripts\VMEController\Util\FetchImageFromURL.cs" />
      <Compile Include="Assets\Scripts\VMEController\Util\FlightPoint.cs" />
@@ -150,7 +151,6 @@
      <Compile Include="Assets\Scripts\VMEController\Util\VMEPlayerController.cs" />
      <Compile Include="Assets\Scripts\VMEController\Util\VMERenderObject.cs" />
      <Compile Include="Assets\Scripts\VMEController\Util\VMERotPosProvider.cs" />
-     <Compile Include="Assets\SmokeTunnel.cs" />
      <None Include="Assets\Resources\Cardboard\Legacy\Resources\SkyboxMesh.shader" />
      <None Include="Assets\Plugins\donotdelete.txt" />
      <None Include="Assets\Shaders\UnityVC\StandardVC.shader" />

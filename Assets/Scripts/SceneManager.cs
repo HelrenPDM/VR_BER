@@ -89,11 +89,11 @@ public class SceneManager : MonoBehaviour {
 
 		// configure character controller
 		#if UNITY_STANDALONE
-		SetUpController(OVRControllerPrefab,"CenterEyeAnchor", "VMEStart", false);
+		SetUpController(OVRControllerPrefab, "CenterEyeAnchor", "VMEStart", true);
 		#elif UNITY_ANDROID
-		SetUpController(CardboardControllerPrefab,"Main Camera Left", "VMEStart", false);
+		SetUpController(CardboardControllerPrefab, "Main Camera Left", "VMEStart", false);
 		#elif UNITY_EDITOR && UNITY_WEBGL
-		SetUpController(StandardController,"StandardCamera", "VMEStart", false);
+		SetUpController(StandardController, "StandardCamera", "VMEStart", false);
 		#endif
 	}
 
@@ -154,28 +154,28 @@ public class SceneManager : MonoBehaviour {
 			Debug.Log("Start at X: " + p.x +
 			          " Y: " + p.y +
 			          " Z: " + p.z);
-			#if UNITY_ANDROID
-			if (this.Player.transform.name != "CardboardMain")
+			#if !UNITY_STANDALONE
+			if (body)
 			{
-				Debug.Log ("Trying to instantiate " + controllerGO);
-				this.Player = GameObject.Instantiate(Resources.Load (controllerGO) as GameObject);
-				this.Player.AddComponent<CharacterController>();
-				if (GameObject.Find("StandardCamera") != null)
-				{
-					GameObject.Find("StandardCamera").SetActive(false);
-				}
+				Debug.Log("Correcting body height.");
+				p.y += PlayerHeight;
+			}
+			#if UNITY_ANDROID
+			Debug.Log ("Trying to instantiate " + controllerGO);
+			this.Player = GameObject.Instantiate(Resources.Load (controllerGO) as GameObject);
+			this.Player.AddComponent<CharacterController>();
+			if (GameObject.Find("StandardCamera") != null)
+			{
+				GameObject.Find("StandardCamera").SetActive(false);
 			}
 			#elif UNITY_STANDALONE
-			if (this.Player.transform.name != "OVRPlayerController")
-			{
-				Debug.Log ("Trying to instantiate " + controllerGO);
-				this.Player = GameObject.Instantiate(Resources.Load (controllerGO) as GameObject);
-				this.Player.GetComponent<OVRPlayerController>().HmdRotatesY = false;	
+			Debug.Log ("Trying to instantiate " + controllerGO);
+			this.Player = GameObject.Instantiate(Resources.Load (controllerGO) as GameObject);
+			this.Player.GetComponent<OVRPlayerController>().HmdRotatesY = false;	
 			
-				if (GameObject.Find("StandardCamera") != null)
-				{
-					GameObject.Find("StandardCamera").SetActive(false);
-				}
+			if (GameObject.Find("StandardCamera") != null)
+			{
+				GameObject.Find("StandardCamera").SetActive(false);
 			}
 			#endif
 			this.Player.transform.position = p;
@@ -186,6 +186,7 @@ public class SceneManager : MonoBehaviour {
 				{
 					this.Player.AddComponent<NavMeshAgent>();
 					Debug.Log("SceneManager: NavMeshAgent added to Player");
+					CheckNavMeshAgent(this.Player.GetComponent<NavMeshAgent>());
 				}
 			}
 			else
@@ -196,11 +197,13 @@ public class SceneManager : MonoBehaviour {
 					Debug.Log("SceneManager: NavMeshAgent removed from Player");
 				}
 			}
+
 			if (this.Player.GetComponent<CharacterController>() == null)
 			{
 				this.Player.AddComponent<CharacterController>();
 				Debug.Log("SceneManager: CharacterController added to Player");
 			}
+
 			if (this.Player.GetComponent<VMEPlayerController>() == null)
 			{
 				this.Player.AddComponent<VMEPlayerController>();
@@ -222,17 +225,6 @@ public class SceneManager : MonoBehaviour {
 				CameraRig = GameObject.Find(cameraGO);
 			}
 
-			#if !UNITY_STANDALONE
-			if (body)
-			{
-				p.y += PlayerHeight;
-			}
-			#endif
-			CameraRig.transform.position = p;
-			Vector3 euler = Vector3.zero;
-			Player.transform.rotation = Quaternion.Euler(euler);
-			CameraRig.transform.localRotation = Quaternion.Euler(euler);
-
 			SetUpUI(CameraRig.transform, "HUD", 0f, 0f, 0.5f);
 
 			if (body)
@@ -245,6 +237,12 @@ public class SceneManager : MonoBehaviour {
 			{
 				Debug.Log (e.name + " in Player tree.");
 			}
+
+			#endif
+			//CameraRig.transform.localPosition = p;
+			Vector3 euler = Vector3.zero;
+			Player.transform.rotation = Quaternion.Euler(euler);
+			CameraRig.transform.localRotation = Quaternion.Euler(euler);
 		}
 	}
 
@@ -262,6 +260,13 @@ public class SceneManager : MonoBehaviour {
 			Debug.Log("Start at X: " + p.x +
 			          " Y: " + p.y +
 			          " Z: " + p.z);
+			#if !UNITY_STANDALONE
+			if (body)
+			{
+				p.y += PlayerHeight;
+			}
+			#endif
+
 			this.Player.transform.position = p;
 			
 			if (body)
@@ -270,6 +275,7 @@ public class SceneManager : MonoBehaviour {
 				{
 					this.Player.AddComponent<NavMeshAgent>();
 					Debug.Log("SceneManager: NavMeshAgent added to Player");
+					CheckNavMeshAgent(this.Player.GetComponent<NavMeshAgent>());
 				}
 				this.Player.GetComponent<VMEPlayerController>().MoveMode = true;
 			}
@@ -283,13 +289,6 @@ public class SceneManager : MonoBehaviour {
 				this.Player.GetComponent<VMEPlayerController>().MoveMode = false;
 			}
 
-			#if !UNITY_STANDALONE
-			if (body)
-			{
-				p.y += PlayerHeight;
-			}
-			#endif
-
 			CameraRig.transform.position = p;
 			Vector3 euler = Vector3.zero;
 			Player.transform.rotation = Quaternion.Euler(euler);
@@ -297,6 +296,18 @@ public class SceneManager : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// Checks the nav mesh agent.
+	/// </summary>
+	/// <param name="agent">Agent.</param>
+	private void CheckNavMeshAgent(NavMeshAgent agent)
+	{
+		agent.baseOffset = 0.5f;
+		agent.autoTraverseOffMeshLink = true;
+		agent.updateRotation = false;
+		agent.height = 1.8f;
+	}
+	
 	/// <summary>
 	/// Sets up UI by loading a HUD prefab and attaching it to a parent transform that represents 
 	/// </summary>
