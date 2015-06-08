@@ -79,7 +79,11 @@ public class VMEPlayerController : MonoBehaviour {
 
 		CheckNavMeshAgent();
 
-		#if !UNITY_STANDALONE
+		#if UNITY_STANDALONE
+		m_CameraRig = GameObject.Find("OVRCameraRig").GetComponent<OVRCameraRig>().leftEyeCamera;
+		#elif UNITY_ANDROID
+		m_CameraRig = GameObject.Find("Main Camera Left").GetComponent<Camera>();
+		#else
 		Camera[] CameraRigs = transform.GetComponentsInChildren<Camera>();
 		
 		if(CameraRigs.Length == 0)
@@ -91,11 +95,9 @@ public class VMEPlayerController : MonoBehaviour {
 		}
 		else
 			m_CameraRig = CameraRigs[0];
-
+		
 		if(!m_CameraRig.isActiveAndEnabled)
 			Debug.LogWarning("VMEPlayerController: No Camera attached.");
-		#else
-		m_CameraRig = GameObject.Find("OVRCameraRig").GetComponent<OVRCameraRig>().leftEyeCamera;
 		#endif
 
 		Debug.Log ("CameraRig set to " + m_CameraRig.name);
@@ -194,10 +196,10 @@ public class VMEPlayerController : MonoBehaviour {
 			else
 			{
 				m_Agent = gameObject.GetComponent<NavMeshAgent>();
-				m_Agent.baseOffset = 0.1f;
+				m_Agent.baseOffset = 0.0f;
 				m_Agent.autoTraverseOffMeshLink = true;
 				m_Agent.updateRotation = false;
-				m_Agent.height = 1.7f;
+				m_Agent.height = 1.8f;
 			}
 		}
 	}

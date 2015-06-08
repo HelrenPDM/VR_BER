@@ -89,9 +89,9 @@ public class SceneManager : MonoBehaviour {
 
 		// configure character controller
 		#if UNITY_STANDALONE
-		SetUpController(OVRControllerPrefab,"CenterEyeAnchor", "VMEMainHall", false);
+		SetUpController(OVRControllerPrefab,"CenterEyeAnchor", "VMEStart", false);
 		#elif UNITY_ANDROID
-		SetUpController(CardboardControllerPrefab,"Main Camera", "VMEStart", false);
+		SetUpController(CardboardControllerPrefab,"Main Camera Left", "VMEStart", false);
 		#elif UNITY_EDITOR && UNITY_WEBGL
 		SetUpController(StandardController,"StandardCamera", "VMEStart", false);
 		#endif
@@ -222,7 +222,7 @@ public class SceneManager : MonoBehaviour {
 				CameraRig = GameObject.Find(cameraGO);
 			}
 
-			#if !UNITY_STANDALONE || !UNITY_ANDROID
+			#if !UNITY_STANDALONE
 			if (body)
 			{
 				p.y += PlayerHeight;
@@ -283,7 +283,7 @@ public class SceneManager : MonoBehaviour {
 				this.Player.GetComponent<VMEPlayerController>().MoveMode = false;
 			}
 
-			#if !UNITY_STANDALONE || !UNITY_ANDROID
+			#if !UNITY_STANDALONE
 			if (body)
 			{
 				p.y += PlayerHeight;
