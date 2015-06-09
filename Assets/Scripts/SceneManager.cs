@@ -154,12 +154,8 @@ public class SceneManager : MonoBehaviour {
 			Debug.Log("Start at X: " + p.x +
 			          " Y: " + p.y +
 			          " Z: " + p.z);
-			#if !UNITY_STANDALONE
-			if (body)
-			{
-				Debug.Log("Correcting body height.");
-				p.y += PlayerHeight;
-			}
+			this.Player.transform.position = p;
+
 			#if UNITY_ANDROID
 			Debug.Log ("Trying to instantiate " + controllerGO);
 			this.Player = GameObject.Instantiate(Resources.Load (controllerGO) as GameObject);
@@ -178,7 +174,6 @@ public class SceneManager : MonoBehaviour {
 				GameObject.Find("StandardCamera").SetActive(false);
 			}
 			#endif
-			this.Player.transform.position = p;
 
 			if (body)
 			{
@@ -193,7 +188,7 @@ public class SceneManager : MonoBehaviour {
 			{
 				if (this.Player.GetComponent<NavMeshAgent>() != null)
 				{
-					Destroy(this.Player.GetComponent<NavMeshAgent>());
+					DestroyImmediate(this.Player.GetComponent<NavMeshAgent>());
 					Debug.Log("SceneManager: NavMeshAgent removed from Player");
 				}
 			}
@@ -232,17 +227,18 @@ public class SceneManager : MonoBehaviour {
 				SetUpUI(this.Player.transform, "Menu", 0f, -0.7f, 0.5f);
 			}
 
-			Transform[] PlayerItems = this.Player.GetComponentsInChildren<Transform>(false);
-			foreach (Transform e in PlayerItems)
+			// camera correction
+			#if !UNITY_STANDALONE
+			if (body)
 			{
-				Debug.Log (e.name + " in Player tree.");
+				Debug.Log("Correcting body height.");
+				var q = new Vector3(0f,PlayerHeight,0f);
+				CameraRig.transform.localPosition = q;
 			}
-
 			#endif
-			//CameraRig.transform.localPosition = p;
+
 			Vector3 euler = Vector3.zero;
 			Player.transform.rotation = Quaternion.Euler(euler);
-			CameraRig.transform.localRotation = Quaternion.Euler(euler);
 		}
 	}
 
@@ -254,21 +250,15 @@ public class SceneManager : MonoBehaviour {
 	private void UpdateController(string locationGO, bool body)
 	{
 		if (this.Player != null)
-		{
+		{	
+			
 			// set player position and orientation to scene start object
 			var p = GameObject.Find (locationGO).transform.position;
 			Debug.Log("Start at X: " + p.x +
 			          " Y: " + p.y +
 			          " Z: " + p.z);
-			#if !UNITY_STANDALONE
-			if (body)
-			{
-				p.y += PlayerHeight;
-			}
-			#endif
-
 			this.Player.transform.position = p;
-			
+
 			if (body)
 			{
 				if (this.Player.GetComponent<NavMeshAgent>() == null)
@@ -283,16 +273,29 @@ public class SceneManager : MonoBehaviour {
 			{
 				if (this.Player.GetComponent<NavMeshAgent>() != null)
 				{
-					Destroy(this.Player.GetComponent<NavMeshAgent>());
+					DestroyImmediate(this.Player.GetComponent<NavMeshAgent>());
 					Debug.Log("SceneManager: NavMeshAgent removed from Player");
 				}
 				this.Player.GetComponent<VMEPlayerController>().MoveMode = false;
 			}
 
-			CameraRig.transform.position = p;
+			if (body)
+			{
+				SetUpUI(this.Player.transform, "Menu", 0f, -0.7f, 0.5f);
+			}
+
+			// camera correction
+			#if !UNITY_STANDALONE
+			if (body)
+			{
+				Debug.Log("Correcting body height.");
+				var q = new Vector3(0f,PlayerHeight,0f);
+				CameraRig.transform.localPosition = q;		
+			}
+			#endif
+
 			Vector3 euler = Vector3.zero;
 			Player.transform.rotation = Quaternion.Euler(euler);
-			CameraRig.transform.localRotation = Quaternion.Euler(euler);
 		}
 	}
 
@@ -302,10 +305,10 @@ public class SceneManager : MonoBehaviour {
 	/// <param name="agent">Agent.</param>
 	private void CheckNavMeshAgent(NavMeshAgent agent)
 	{
-		agent.baseOffset = 0.5f;
+		agent.baseOffset = 0.0f;
 		agent.autoTraverseOffMeshLink = true;
 		agent.updateRotation = false;
-		agent.height = 1.8f;
+		//agent.height = 1.8f;
 	}
 	
 	/// <summary>
@@ -335,6 +338,11 @@ public class SceneManager : MonoBehaviour {
 	private void handleSceneEvent(object sender, SceneEventArgs args)
 	{
 		Debug.Log("SceneManager: Reloading Player at new position with body " + args.NextBody.ToString() + ".");
+		if (this.Player.GetComponent<NavMeshAgent>() != null)
+		{
+			DestroyImmediate(this.Player.GetComponent<NavMeshAgent>());
+			Debug.Log("SceneManager: NavMeshAgent removed from Player");
+		}
 		// configure character controller
 		UpdateController(args.NextSpot.name, args.NextBody);
 	}
