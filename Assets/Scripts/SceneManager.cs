@@ -89,9 +89,9 @@ public class SceneManager : MonoBehaviour {
 
 		// configure character controller
 		#if UNITY_STANDALONE
-		SetUpController(OVRControllerPrefab, "CenterEyeAnchor", "VMEStart", true);
+		SetUpController(OVRControllerPrefab, "CenterEyeAnchor", "VMEStart", false);
 		#elif UNITY_ANDROID
-		SetUpController(CardboardControllerPrefab, "Main Camera Left", "VMEStart", false);
+		SetUpController(CardboardControllerPrefab, "Head", "VMEStart", false);
 		#elif UNITY_EDITOR && UNITY_WEBGL
 		SetUpController(StandardController, "StandardCamera", "VMEStart", false);
 		#endif
@@ -149,12 +149,6 @@ public class SceneManager : MonoBehaviour {
 
 		if (this.Player != null)
 		{
-			// set player position and orientation to scene start object
-			var p = GameObject.Find (locationGO).transform.position;
-			Debug.Log("Start at X: " + p.x +
-			          " Y: " + p.y +
-			          " Z: " + p.z);
-			this.Player.transform.position = p;
 
 			#if UNITY_ANDROID
 			Debug.Log ("Trying to instantiate " + controllerGO);
@@ -174,7 +168,7 @@ public class SceneManager : MonoBehaviour {
 				GameObject.Find("StandardCamera").SetActive(false);
 			}
 			#endif
-
+			
 			if (body)
 			{
 				if (this.Player.GetComponent<NavMeshAgent>() == null)
@@ -222,23 +216,7 @@ public class SceneManager : MonoBehaviour {
 
 			SetUpUI(CameraRig.transform, "HUD", 0f, 0f, 0.5f);
 
-			if (body)
-			{
-				SetUpUI(this.Player.transform, "Menu", 0f, -0.7f, 0.5f);
-			}
-
-			// camera correction
-			#if !UNITY_STANDALONE
-			if (body)
-			{
-				Debug.Log("Correcting body height.");
-				var q = new Vector3(0f,PlayerHeight,0f);
-				CameraRig.transform.localPosition = q;
-			}
-			#endif
-
-			Vector3 euler = Vector3.zero;
-			Player.transform.rotation = Quaternion.Euler(euler);
+			UpdateController(locationGO, body);
 		}
 	}
 
@@ -268,6 +246,25 @@ public class SceneManager : MonoBehaviour {
 					CheckNavMeshAgent(this.Player.GetComponent<NavMeshAgent>());
 				}
 				this.Player.GetComponent<VMEPlayerController>().MoveMode = true;
+
+				SetUpUI(this.Player.transform, "Menu", 0f, -0.7f, 0.5f);
+				
+				// camera correction
+				#if !UNITY_STANDALONE
+				var r = CameraRig.transform.position;
+				Debug.Log("(Before correction) Camera at X: " + r.x +
+				          " Y: " + r.y +
+				          " Z: " + r.z);
+				
+				Debug.Log("Correcting body height.");
+				var q = new Vector3(0f,PlayerHeight,0f);
+				CameraRig.transform.localPosition = q;
+				
+				r = CameraRig.transform.position;
+				Debug.Log("After correction) Camera at X: " + r.x +
+				          " Y: " + r.y +
+				          " Z: " + r.z);
+				#endif
 			}
 			else
 			{
@@ -278,24 +275,6 @@ public class SceneManager : MonoBehaviour {
 				}
 				this.Player.GetComponent<VMEPlayerController>().MoveMode = false;
 			}
-
-			if (body)
-			{
-				SetUpUI(this.Player.transform, "Menu", 0f, -0.7f, 0.5f);
-			}
-
-			// camera correction
-			#if !UNITY_STANDALONE
-			if (body)
-			{
-				Debug.Log("Correcting body height.");
-				var q = new Vector3(0f,PlayerHeight,0f);
-				CameraRig.transform.localPosition = q;		
-			}
-			#endif
-
-			Vector3 euler = Vector3.zero;
-			Player.transform.rotation = Quaternion.Euler(euler);
 		}
 	}
 
@@ -308,7 +287,7 @@ public class SceneManager : MonoBehaviour {
 		agent.baseOffset = 0.0f;
 		agent.autoTraverseOffMeshLink = true;
 		agent.updateRotation = false;
-		//agent.height = 1.8f;
+		agent.height = 1.8f;
 	}
 	
 	/// <summary>
