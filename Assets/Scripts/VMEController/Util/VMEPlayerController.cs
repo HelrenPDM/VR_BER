@@ -117,7 +117,14 @@ public class VMEPlayerController : MonoBehaviour {
 			if (CenterRayTracker.TargetObject.layer == 8)
 			{
 				FocusObjectInGUI(CenterRayTracker.TargetObjectName);
-				GazePointerColor(CenterRayTracker.FocusLockPercentage, 1f);
+				if (!CenterRayTracker.TargetObject.CompareTag("Hover"))
+				{
+					GazePointerColor(CenterRayTracker.FocusLockPercentage, 1f);
+				}
+				else
+				{
+					GazePointerColor(1, 1f);
+				}
 			}
 			else
 			{

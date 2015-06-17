@@ -29,7 +29,17 @@ using System;
 public delegate void FocusEventHandler(object sender, FocusEventArgs e);
 
 /// <summary>
-/// VME focus timer is a helper class to handle duration of a ray hit on an object and returning focus events.
+/// Focus locked event handler.
+/// </summary>
+public delegate void FocusEnterHandler(object sender, FocusEventArgs e);
+
+/// <summary>
+/// Focus locked event handler.
+/// </summary>
+public delegate void FocusExitHandler(object sender, FocusEventArgs e);
+
+/// <summary>
+/// VME focus timer is a helper class to handle duration of a ray hit on an object and returning focus events as well as handling hover events (Enter/Exit).
 /// </summary>
 public class VMEFocusTimer {
 
@@ -37,6 +47,16 @@ public class VMEFocusTimer {
 	/// Occurs when focus locked.
 	/// </summary>
 	public event FocusEventHandler Focus;
+
+	/// <summary>
+	/// Occurs when focus enter.
+	/// </summary>
+	public event FocusEnterHandler FocusEnter;
+
+	/// <summary>
+	/// Occurs when focus exit.
+	/// </summary>
+	public event FocusExitHandler FocusExit;
 
 	#region private variables
 	private float focusThreshold = 2.0f;
@@ -46,6 +66,7 @@ public class VMEFocusTimer {
 	private GameObject focusObject;
 	private bool locked;
 	private bool nullObject;
+	private FocusEventArgs args;
 	#endregion
 
 	#region init section
@@ -55,6 +76,8 @@ public class VMEFocusTimer {
 		this.focusObject = null;
 		this.locked = false;
 		this.nullObject = true;
+
+		args = new FocusEventArgs();
 	}
 
 	// Use this for parametrized initialization
@@ -64,6 +87,8 @@ public class VMEFocusTimer {
 		this.focusObject = null;
 		this.locked = false;
 		this.nullObject = true;
+
+		args = new FocusEventArgs();
 	}
 	#endregion
 
@@ -74,15 +99,13 @@ public class VMEFocusTimer {
 	/// <param name="focObject">Foc object.</param>
 	public void UpdateFocus (GameObject focObject)
 	{
-		FocusEventArgs args = new FocusEventArgs();
-
 		if (focObject != null)
 		{
 			this.nullObject = false;
 			// still looking at object
 			if (this.focusObject == focObject)
 			{
-				if (!locked)
+				if (!locked && !focObject.CompareTag("Hover"))
 				{
 					if (this.currentTimePassed <= this.focusThreshold)
 					{
@@ -94,18 +117,34 @@ public class VMEFocusTimer {
 						args.FocusObject = focObject;
 						args.InFocus = true;
 						OnFocusEvent(args);
-						ResetFocus();
+						locked = true;
 					}
 				}
 			}
 			// object changed, set local to new
 			else
 			{
+				// OnExit for old object
+				if (this.focusObject != null && this.focusObject.CompareTag("Hover"))
+				{
+					args.FocusObject = this.focusObject != null ? this.focusObject : null;
+					args.InFocus = false;
+					OnFocusExit(args);
+				}
+				
+				// No immediate focus on new
 				this.focusObject = focObject;
 				ResetFocus();
-				// fire event InFocus false
+				
 				args.FocusObject = focObject;
 				args.InFocus = false;
+				// OnEnter for new object
+				if (focObject.CompareTag("Hover"))
+				{
+					OnFocusEnter(args);
+				}
+				// fire event InFocus false
+				
 				OnFocusEvent(args);
 			}
 		}
@@ -156,13 +195,37 @@ public class VMEFocusTimer {
 	#endregion
 
 	/// <summary>
-	/// Raises the focus locked event event.
+	/// Raises the focus locked event.
 	/// </summary>
 	/// <param name="e">E.</param>
 	protected virtual void OnFocusEvent(FocusEventArgs e)
 	{
 		if (Focus != null) {
 			Focus (this, e);
+		}
+	}
+
+	/// <summary>
+	/// Raises the focus enter event.
+	/// </summary>
+	/// <param name="e">E.</param>
+	protected virtual void OnFocusEnter(FocusEventArgs e)
+	{
+		//Debug.Log(this.ToString() + ".OnFocusEnter(...)");
+		if (FocusEnter != null) {
+			FocusEnter (this, e);
+		}
+	}
+	
+	/// <summary>
+	/// Raises the focus exit event.
+	/// </summary>
+	/// <param name="e">E.</param>
+	protected virtual void OnFocusExit(FocusEventArgs e)
+	{
+		//Debug.Log(this.ToString() + ".OnFocusExit(...)");
+		if (FocusExit != null) {
+			FocusExit (this, e);
 		}
 	}
 }

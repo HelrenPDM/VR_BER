@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_5_0_2;UNITY_5_0;UNITY_5;ENABLE_LICENSE_RENAME;ENABLE_NEW_BUGREPORTER;ENABLE_2D_PHYSICS;ENABLE_4_6_FEATURES;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_NEW_HIERARCHY;ENABLE_PHYSICS;ENABLE_PHYSICS_PHYSX3;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_AUDIOMIXER_SUSPEND;ENABLE_NONPRO;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_MONO;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_5_0_2;UNITY_5_0;UNITY_5;ENABLE_LICENSE_RENAME;ENABLE_NEW_BUGREPORTER;ENABLE_2D_PHYSICS;ENABLE_4_6_FEATURES;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MULTIPLE_DISPLAYS;ENABLE_NEW_HIERARCHY;ENABLE_PHYSICS;ENABLE_PHYSICS_PHYSX3;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_UNITYEVENTS;ENABLE_WWW;ENABLE_AUDIOMIXER_SUSPEND;ENABLE_NONPRO;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;RENDER_SOFTWARE_CURSOR;UNITY_WEBGL;ENABLE_TEXTUREID_MAP;ENABLE_IL2CPP;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -60,22 +60,6 @@
      <Compile Include="Assets\Resources\Cardboard\Scripts\GazeInputModule.cs" />
      <Compile Include="Assets\Resources\Cardboard\Scripts\RadialUndistortionEffect.cs" />
      <Compile Include="Assets\Resources\Cardboard\Scripts\StereoController.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\OVROverlay.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\OVRPlatformMenu.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\OVRPostRender.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\OVRTouchpad.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\OVRVolumeControl.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\Utils\OVRChromaticAberration.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\Utils\OVRDebugGraph.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\Utils\OVRDebugUtils.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\Utils\OVRGameUtils.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\Utils\OVRInputControl.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\Utils\OVRMathUtils.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\Utils\OVRModeParms.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\Utils\OVRMonoscopic.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\Utils\OVRResetOrientation.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\Utils\OVRTimeWarpUtils.cs" />
-     <Compile Include="Assets\Resources\OVR\Moonlight\Scripts\Utils\OVRWaitCursor.cs" />
      <Compile Include="Assets\Resources\OVR\Scripts\OVRCameraRig.cs" />
      <Compile Include="Assets\Resources\OVR\Scripts\OVRCommon.cs" />
      <Compile Include="Assets\Resources\OVR\Scripts\OVRDisplay.cs" />
@@ -135,22 +119,23 @@
      <Compile Include="Assets\Resources\Standard Assets\Utility\WaypointCircuit.cs" />
      <Compile Include="Assets\Resources\Standard Assets\Utility\WaypointProgressTracker.cs" />
      <Compile Include="Assets\Scripts\SceneManager.cs" />
-     <Compile Include="Assets\Scripts\SmokeTunnel.cs" />
      <Compile Include="Assets\Scripts\VMEController\SceneCharacter.cs" />
      <Compile Include="Assets\Scripts\VMEController\Util\FetchImageFromURL.cs" />
      <Compile Include="Assets\Scripts\VMEController\Util\FlightPoint.cs" />
      <Compile Include="Assets\Scripts\VMEController\Util\GazePointer.cs" />
-     <Compile Include="Assets\Scripts\VMEController\Util\UpdatePosText3D.cs" />
-     <Compile Include="Assets\Scripts\VMEController\Util\UpdateTextMesh.cs" />
      <Compile Include="Assets\Scripts\VMEController\Util\VMECameraRayTracker.cs" />
      <Compile Include="Assets\Scripts\VMEController\Util\VMECameraRig.cs" />
      <Compile Include="Assets\Scripts\VMEController\Util\VMEFocusTimer.cs" />
      <Compile Include="Assets\Scripts\VMEController\Util\VMEMenu.cs" />
      <Compile Include="Assets\Scripts\VMEController\Util\VMENextInfoPoint.cs" />
      <Compile Include="Assets\Scripts\VMEController\Util\VMENextSpot.cs" />
+     <Compile Include="Assets\Scripts\VMEController\Util\VMEPlayMovie.cs" />
      <Compile Include="Assets\Scripts\VMEController\Util\VMEPlayerController.cs" />
-     <Compile Include="Assets\Scripts\VMEController\Util\VMERenderObject.cs" />
      <Compile Include="Assets\Scripts\VMEController\Util\VMERotPosProvider.cs" />
+     <Compile Include="Assets\Scripts\VMEController\Util\VMEToggleRender.cs" />
+     <Compile Include="Assets\Scripts\VMEController\Util\VMETriggerAction.cs" />
+     <Compile Include="Assets\Scripts\VMEController\Util\VMEUpdatePosText3D.cs" />
+     <Compile Include="Assets\Scripts\VMEController\Util\VMEUpdateTextMesh.cs" />
      <None Include="Assets\Resources\Cardboard\Legacy\Resources\SkyboxMesh.shader" />
      <None Include="Assets\Plugins\donotdelete.txt" />
      <None Include="Assets\Shaders\UnityVC\StandardVC.shader" />
@@ -158,13 +143,11 @@
      <None Include="Assets\Plugins\x86_64\donotdelete.txt" />
      <None Include="Assets\Plugins\Android\AndroidManifest 1.xml" />
      <None Include="Assets\Resources\OVR\Shaders\TextShader3D.shader" />
-     <None Include="Assets\Resources\OVR\Moonlight\Shaders\Unlit Crosshair.shader" />
      <None Include="Assets\Resources\OVR\Shaders\Unlit Transparent HUD.shader" />
      <None Include="Assets\Resources\Cardboard\Legacy\Resources\GUIScreen.shader" />
      <None Include="Assets\Plugins\Android\AndroidManifest.xml" />
      <None Include="Assets\Resources\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
      <None Include="Assets\Shaders\UnityVC\UnityVC.cginc" />
-     <None Include="Assets\Resources\OVR\Moonlight\Materials\GlobalMenu\OVRCutoutRamp.shader" />
      <None Include="Assets\Resources\Standard Assets\Characters\ThirdPersonCharacter\ThirdPersonCharacterGuidelines.txt" />
      <None Include="Assets\Resources\OVR\Shaders\OVRGUIShader.shader" />
      <None Include="Assets\Resources\Cardboard\Resources\RadialUndistortionEffect.shader" />

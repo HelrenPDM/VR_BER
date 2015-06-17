@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class VMERenderObject : MonoBehaviour {
+public class VMEToggleRender : MonoBehaviour {
 
 	public Transform[] targets;
-	public bool render { get; private set; }
 
 	// Use this for initialization
 	void Start () {
@@ -25,9 +24,8 @@ public class VMERenderObject : MonoBehaviour {
 		{
 			foreach (Transform t in targets)
 			{
-				t.transform.GetComponent<MeshRenderer>().enabled = !this.render;
+				t.transform.GetComponent<MeshRenderer>().enabled = !t.transform.GetComponent<MeshRenderer>().enabled;
 			}
-			this.render = !this.render;
 		}
 	}
 }

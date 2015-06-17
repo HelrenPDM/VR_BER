@@ -4,7 +4,7 @@ using System.Collections;
 /// <summary>
 /// Update text mesh.
 /// </summary>
-public class UpdateTextMesh : MonoBehaviour {
+public class VMEUpdateTextMesh : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {

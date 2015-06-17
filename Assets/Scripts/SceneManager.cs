@@ -37,6 +37,8 @@ public class SceneManager : MonoBehaviour {
 	public string CursorPrefab = "Prefabs/GazePointer";
 	public string StandardController = "CharacterController";
 	public float PlayerHeight = 1.8f;
+	public Transform VMEStart;
+	public bool UseBody;
 	#endregion
 
 	#region subsystem managers
@@ -61,18 +63,20 @@ public class SceneManager : MonoBehaviour {
 	/// </summary>
 	public static SceneManager instance { get; private set; }
 
-	public static GameObject globalEventSystem { get; private set; }
-
 	#region private variables
 	// keep a clean parent player object
-	private GameObject Player;
+	private GameObject m_Player;
 
-	private GameObject CameraRig;
+	//
+	private GameObject m_CameraRig;
+
+	//
+	private NavMeshAgent m_NavAgent;
 
 	// the heads up display attached to the parent camera (main or left eye)
-	private GameObject HUD;
+	private GameObject m_HUD;
 	// the menu attached to the reference euler angles at body position
-	private GameObject Menu;
+	private GameObject m_Menu;
 	#endregion
 
 	/// <summary>
@@ -80,8 +84,6 @@ public class SceneManager : MonoBehaviour {
 	/// </summary>
 	private void Awake()
 	{
-		globalEventSystem = GameObject.Find ("EventSystem");
-
 		LoadEnvironment();
 
 		// configure in-/ output devices
@@ -89,11 +91,11 @@ public class SceneManager : MonoBehaviour {
 
 		// configure character controller
 		#if UNITY_STANDALONE
-		SetUpController(OVRControllerPrefab, "CenterEyeAnchor", "VMEStart", false);
+		SetUpController(OVRControllerPrefab, "CenterEyeAnchor", VMEStart, UseBody);
 		#elif UNITY_ANDROID
-		SetUpController(CardboardControllerPrefab, "Head", "VMEStart", false);
+		SetUpController(CardboardControllerPrefab, "Head", VMEStart, UseBody);
 		#elif UNITY_EDITOR && UNITY_WEBGL
-		SetUpController(StandardController, "StandardCamera", "VMEStart", false);
+		SetUpController(StandardController, "StandardCamera", VMEStart, UseBody);
 		#endif
 	}
 
@@ -142,18 +144,20 @@ public class SceneManager : MonoBehaviour {
 	/// </summary>
 	/// <param name="controllerGO">Controller G.</param>
 	/// <param name="cameraGO">Camera G.</param>
-	private void SetUpController(string controllerGO, string cameraGO, string locationGO, bool body)
+	private void SetUpController(string controllerGO, string cameraGO, Transform locationGO, bool body)
 	{
 		// set parent GO
-		this.Player = GameObject.Find("SceneCharacter");
+		this.m_Player = GameObject.Find("SceneCharacter");
 
-		if (this.Player != null)
+		if (this.m_Player != null)
 		{
 
 			#if UNITY_ANDROID
 			Debug.Log ("Trying to instantiate " + controllerGO);
-			this.Player = GameObject.Instantiate(Resources.Load (controllerGO) as GameObject);
-			this.Player.AddComponent<CharacterController>();
+			this.m_Player = GameObject.Instantiate(Resources.Load (controllerGO) as GameObject);
+			this.m_Player.GetComponent<Cardboard>().NeckModelScale = 0;
+			this.m_Player.AddComponent<CharacterController>();
+
 			if (GameObject.Find("StandardCamera") != null)
 			{
 				GameObject.Find("StandardCamera").SetActive(false);
@@ -169,52 +173,34 @@ public class SceneManager : MonoBehaviour {
 			}
 			#endif
 			
-			if (body)
+			if (this.m_Player.GetComponent<CharacterController>() == null)
 			{
-				if (this.Player.GetComponent<NavMeshAgent>() == null)
-				{
-					this.Player.AddComponent<NavMeshAgent>();
-					Debug.Log("SceneManager: NavMeshAgent added to Player");
-					CheckNavMeshAgent(this.Player.GetComponent<NavMeshAgent>());
-				}
-			}
-			else
-			{
-				if (this.Player.GetComponent<NavMeshAgent>() != null)
-				{
-					DestroyImmediate(this.Player.GetComponent<NavMeshAgent>());
-					Debug.Log("SceneManager: NavMeshAgent removed from Player");
-				}
-			}
-
-			if (this.Player.GetComponent<CharacterController>() == null)
-			{
-				this.Player.AddComponent<CharacterController>();
+				this.m_Player.AddComponent<CharacterController>();
 				Debug.Log("SceneManager: CharacterController added to Player");
 			}
 
-			if (this.Player.GetComponent<VMEPlayerController>() == null)
+			if (this.m_Player.GetComponent<VMEPlayerController>() == null)
 			{
-				this.Player.AddComponent<VMEPlayerController>();
-				this.Player.GetComponent<VMEPlayerController>().CenterRayTracker.Scene += handleSceneEvent;
+				this.m_Player.AddComponent<VMEPlayerController>();
+				this.m_Player.GetComponent<VMEPlayerController>().CenterRayTracker.Scene += handleSceneEvent;
 				Debug.Log("SceneManager: VMEPlayerController added to Player");
 			}
 
 			if (body)
 			{
-				this.Player.GetComponent<VMEPlayerController>().MoveMode = true;
+				this.m_Player.GetComponent<VMEPlayerController>().MoveMode = true;
 			}
 			else
 			{
-				this.Player.GetComponent<VMEPlayerController>().MoveMode = false;
+				this.m_Player.GetComponent<VMEPlayerController>().MoveMode = false;
 			}
 			
-			if (CameraRig == null)
+			if (m_CameraRig == null)
 			{
-				CameraRig = GameObject.Find(cameraGO);
+				m_CameraRig = GameObject.Find(cameraGO);
 			}
 
-			SetUpUI(CameraRig.transform, "HUD", 0f, 0f, 0.5f);
+			SetUpUI(m_CameraRig.transform, "HUD", 0f, 0f, 0.5f);
 
 			UpdateController(locationGO, body);
 		}
@@ -225,42 +211,42 @@ public class SceneManager : MonoBehaviour {
 	/// </summary>
 	/// <param name="locationGO">Location G.</param>
 	/// <param name="body">If set to <c>true</c> body.</param>
-	private void UpdateController(string locationGO, bool body)
+	private void UpdateController(Transform locationGO, bool body)
 	{
-		if (this.Player != null)
+		if (this.m_Player != null)
 		{	
 			
 			// set player position and orientation to scene start object
-			var p = GameObject.Find (locationGO).transform.position;
+			var p = locationGO.transform.position;
 			Debug.Log("Start at X: " + p.x +
 			          " Y: " + p.y +
 			          " Z: " + p.z);
-			this.Player.transform.position = p;
+			this.m_Player.transform.position = p;
 
 			if (body)
 			{
-				if (this.Player.GetComponent<NavMeshAgent>() == null)
+				if (m_NavAgent == null)
 				{
-					this.Player.AddComponent<NavMeshAgent>();
+					this.m_Player.AddComponent<NavMeshAgent>();
+					m_NavAgent = this.m_Player.GetComponent<NavMeshAgent>();
 					Debug.Log("SceneManager: NavMeshAgent added to Player");
-					CheckNavMeshAgent(this.Player.GetComponent<NavMeshAgent>());
+					CheckNavMeshAgent(m_NavAgent);
 				}
-				this.Player.GetComponent<VMEPlayerController>().MoveMode = true;
-
-				SetUpUI(this.Player.transform, "Menu", 0f, -0.7f, 0.5f);
+				this.m_Player.GetComponent<VMEPlayerController>().MoveMode = true;
+				
+				SetUpUI(this.m_Player.transform, "Menu", 0f, -0.7f, 0.5f);
 				
 				// camera correction
 				#if !UNITY_STANDALONE
-				var r = CameraRig.transform.position;
+				var r = this.m_Player.transform.position;
 				Debug.Log("(Before correction) Camera at X: " + r.x +
 				          " Y: " + r.y +
 				          " Z: " + r.z);
 				
 				Debug.Log("Correcting body height.");
 				var q = new Vector3(0f,PlayerHeight,0f);
-				CameraRig.transform.localPosition = q;
-				
-				r = CameraRig.transform.position;
+				m_CameraRig.transform.localPosition = p + q;
+				r = this.m_Player.transform.position;
 				Debug.Log("After correction) Camera at X: " + r.x +
 				          " Y: " + r.y +
 				          " Z: " + r.z);
@@ -268,12 +254,12 @@ public class SceneManager : MonoBehaviour {
 			}
 			else
 			{
-				if (this.Player.GetComponent<NavMeshAgent>() != null)
+				if (this.m_Player.GetComponent<NavMeshAgent>() != null)
 				{
-					DestroyImmediate(this.Player.GetComponent<NavMeshAgent>());
+					DestroyImmediate(this.m_Player.GetComponent<NavMeshAgent>());
 					Debug.Log("SceneManager: NavMeshAgent removed from Player");
 				}
-				this.Player.GetComponent<VMEPlayerController>().MoveMode = false;
+				this.m_Player.GetComponent<VMEPlayerController>().MoveMode = false;
 			}
 		}
 	}
@@ -284,7 +270,7 @@ public class SceneManager : MonoBehaviour {
 	/// <param name="agent">Agent.</param>
 	private void CheckNavMeshAgent(NavMeshAgent agent)
 	{
-		agent.baseOffset = 0.0f;
+		agent.baseOffset = 0.1f;
 		agent.autoTraverseOffMeshLink = true;
 		agent.updateRotation = false;
 		agent.height = 1.8f;
@@ -317,13 +303,13 @@ public class SceneManager : MonoBehaviour {
 	private void handleSceneEvent(object sender, SceneEventArgs args)
 	{
 		Debug.Log("SceneManager: Reloading Player at new position with body " + args.NextBody.ToString() + ".");
-		if (this.Player.GetComponent<NavMeshAgent>() != null)
+		if (this.m_Player.GetComponent<NavMeshAgent>() != null)
 		{
-			DestroyImmediate(this.Player.GetComponent<NavMeshAgent>());
+			DestroyImmediate(this.m_Player.GetComponent<NavMeshAgent>());
 			Debug.Log("SceneManager: NavMeshAgent removed from Player");
 		}
 		// configure character controller
-		UpdateController(args.NextSpot.name, args.NextBody);
+		UpdateController(args.NextSpot, args.NextBody);
 	}
 
 }

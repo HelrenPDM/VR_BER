@@ -102,6 +102,8 @@ public class VMECameraRayTracker {
 	public void Init () {
 		this.FocusTimer.Init();
 		this.FocusTimer.Focus += handleFocusEvent;
+		this.FocusTimer.FocusEnter += handleFocusEnter;
+		this.FocusTimer.FocusExit += handleFocusExit;
 		this.TargetObjectFocusLocked = false;
 	}
 
@@ -115,6 +117,8 @@ public class VMECameraRayTracker {
 		this.RayYPosition = rayY;
 		this.FocusTimer.Init();
 		this.FocusTimer.Focus += handleFocusEvent;
+		this.FocusTimer.FocusEnter += handleFocusEnter;
+		this.FocusTimer.FocusExit += handleFocusExit;
 		this.TargetObjectFocusLocked = false;
 	}
 
@@ -154,9 +158,12 @@ public class VMECameraRayTracker {
 			this.FocusLockPercentage = 0.0f;
 		}
 	}
+	#endregion
 
+	#region private methods
 	private void handleFocusEvent(object sender, FocusEventArgs args)
 	{
+		Debug.Log(this.ToString() + ".handleFocusEvent(...)");
 		if (args.FocusObject != null)
 		{
 			this.TargetObject = args.FocusObject;
@@ -169,22 +176,64 @@ public class VMECameraRayTracker {
 			}
 		}
 	}
-	#endregion
 
-	#region private methods
+	private void handleFocusEnter(object sender, FocusEventArgs args)
+	{
+		Debug.Log(this.ToString() + ".handleFocusEnter(...)");
+		FocusEnterBehaviour(args.FocusObject);
+	}
+
+	private void handleFocusExit(object sender, FocusEventArgs args)
+	{
+		Debug.Log(this.ToString() + ".handleFocusExit(...)");
+		FocusExitBehaviour(args.FocusObject);
+	}
+
 	private void FocusTargetBehaviour(GameObject go)
 	{
 		switch (go.tag)
 		{
 		case "TriggerRender":
-			this.TargetObject.GetComponent<VMERenderObject>().renderTarget();
+			go.GetComponent<VMEToggleRender>().renderTarget();
 			Debug.Log("FocusEventVMECameraRayTracker on object: " + this.TargetObjectName);
 			break;
 		case "TriggerScene":
 			SceneEventArgs args = new SceneEventArgs();
-			args.NextSpot = this.TargetObject.GetComponent<VMENextSpot>().nextSpot;
-			args.NextBody = this.TargetObject.GetComponent<VMENextSpot>().nextBody;
+			args.NextSpot = go.GetComponent<VMENextSpot>().nextSpot;
+			args.NextBody = go.GetComponent<VMENextSpot>().nextBody;
 			OnSceneEvent(args);
+			break;
+		case "Trigger":
+			go.GetComponent<VMETriggerAction>().ExecuteAction();
+			Debug.Log("FocusEventVMECameraRayTracker on object: " + this.TargetObjectName);
+			break;
+		default:
+			Debug.Log("FocusEventVMECameraRayTracker on object: " + this.TargetObjectName);
+			break;
+		}
+	}
+
+	private void FocusEnterBehaviour(GameObject go)
+	{
+		switch (go.tag)
+		{
+		case "Hover":
+			go.GetComponent<VMETriggerAction>().ExecuteAction();
+			Debug.Log("FocusEventVMECameraRayTracker on object: " + this.TargetObjectName);
+			break;
+		default:
+			Debug.Log("FocusEventVMECameraRayTracker on object: " + this.TargetObjectName);
+			break;
+		}
+	}
+
+	private void FocusExitBehaviour(GameObject go)
+	{
+		switch (go.tag)
+		{
+		case "Hover":
+			go.GetComponent<VMETriggerAction>().ExecuteAction();
+			Debug.Log("FocusEventVMECameraRayTracker on object: " + this.TargetObjectName);
 			break;
 		default:
 			Debug.Log("FocusEventVMECameraRayTracker on object: " + this.TargetObjectName);

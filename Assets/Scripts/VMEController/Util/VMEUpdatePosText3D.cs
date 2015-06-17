@@ -1,7 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class UpdatePosText3D : MonoBehaviour {
+/// <summary>
+/// VME update position text3 d.
+/// </summary>
+public class VMEUpdatePosText3D : MonoBehaviour {
 
 	private Transform CamPos;
 
