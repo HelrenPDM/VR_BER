@@ -31,8 +31,8 @@ public class VMEPlayMovie : MonoBehaviour {
 	public void Execute()
 	{
 		Debug.Log("Ececute called for " + this.gameObject.ToString());
-		Renderer r = Screen.GetComponent<Renderer>();
 #if UNITY_STANDALONE
+		Renderer r = gameObject.GetComponent<Renderer>();
 		MovieTexture movie = (MovieTexture)r.material.mainTexture;
 		
 		if (movie.isPlaying) {
