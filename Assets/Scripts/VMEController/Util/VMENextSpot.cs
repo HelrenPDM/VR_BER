@@ -5,7 +5,7 @@ public class VMENextSpot : MonoBehaviour {
 
 	public Transform nextSpot;
 	public bool nextBody;
-	
+
 	// Use this for initialization
 	void Start () {
 		if (nextSpot == null)

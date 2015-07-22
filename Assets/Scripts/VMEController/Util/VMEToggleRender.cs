@@ -18,7 +18,7 @@ public class VMEToggleRender : MonoBehaviour {
 	
 	}
 
-	public void renderTarget()
+	public void RenderTarget()
 	{
 		if (targets.Length > 0)
 		{

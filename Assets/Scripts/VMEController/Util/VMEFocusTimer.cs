@@ -105,7 +105,7 @@ public class VMEFocusTimer {
 			// still looking at object
 			if (this.focusObject == focObject)
 			{
-				if (!locked && !focObject.CompareTag("Hover"))
+				if (!locked)
 				{
 					if (this.currentTimePassed <= this.focusThreshold)
 					{
@@ -125,7 +125,7 @@ public class VMEFocusTimer {
 			else
 			{
 				// OnExit for old object
-				if (this.focusObject != null && this.focusObject.CompareTag("Hover"))
+				if (this.focusObject != null)
 				{
 					args.FocusObject = this.focusObject != null ? this.focusObject : null;
 					args.InFocus = false;
@@ -139,12 +139,8 @@ public class VMEFocusTimer {
 				args.FocusObject = focObject;
 				args.InFocus = false;
 				// OnEnter for new object
-				if (focObject.CompareTag("Hover"))
-				{
-					OnFocusEnter(args);
-				}
+				OnFocusEnter(args);
 				// fire event InFocus false
-				
 				OnFocusEvent(args);
 			}
 		}

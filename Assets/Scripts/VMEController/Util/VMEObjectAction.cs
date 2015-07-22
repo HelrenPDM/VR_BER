@@ -1,14 +1,29 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class VMETriggerAction : MonoBehaviour {
+/// <summary>
+/// VME object action for generic raycast handling.
+/// </summary>
+[ExecuteInEditMode]
+public class VMEObjectAction : MonoBehaviour {
 
 	[Tooltip("Function of a behaviour bound script to execute.")]
-	public string m_MethodName = "Execute";
+	public bool HasLockMethod;
+	public string[] m_LockMethodName;
+	public bool HasEnterMethod;
+	public string[] m_EnterMethodName;
+	public bool HasExitMethod;
+	public string[] m_ExitMethodName;
+
+	public bool Active { get; private set; }
+	public bool Lock { get; private set; }
+	public bool Hover { get; private set; }
 
 	// Use this for initialization
 	void Start () {
-	
+		bool Active = false;
+		bool Lock = false;
+		bool Hover = false;
 	}
 	
 	// Update is called once per frame
@@ -17,11 +32,53 @@ public class VMETriggerAction : MonoBehaviour {
 	}
 
 	/// <summary>
-	/// Execute this instance.
+	/// Execute given method upon focus lock.
 	/// </summary>
-	public void ExecuteAction()
+	public void LockAction()
 	{
-		Debug.Log(transform.name + ".ExecuteAction()");
-		gameObject.SendMessage(m_MethodName);
+		#if DEBUG
+		Debug.Log(transform.name + ".LockAction()");
+		#endif
+		if (HasLockMethod)
+		{
+			foreach (string method in m_LockMethodName)
+			{
+				gameObject.SendMessage(method);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Execute given method upon enter.
+	/// </summary>
+	public void EnterAction()
+	{
+		#if DEBUG
+		Debug.Log(transform.name + ".EnterAction()");
+		#endif
+		if (HasEnterMethod)
+		{
+			foreach (string method in m_EnterMethodName)
+			{
+				gameObject.SendMessage(method);
+			}
+		}
+	}
+
+	/// <summary>
+	/// Execute given method upon exit.
+	/// </summary>
+	public void ExitAction()
+	{
+		#if DEBUG
+		Debug.Log(transform.name + ".ExitAction()");
+		#endif
+		if (HasExitMethod)
+		{
+			foreach (string method in m_ExitMethodName)
+			{
+				gameObject.SendMessage(method);
+			}
+		}
 	}
 }

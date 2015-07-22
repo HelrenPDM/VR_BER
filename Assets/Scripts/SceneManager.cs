@@ -77,6 +77,9 @@ public class SceneManager : MonoBehaviour {
 	private GameObject m_HUD;
 	// the menu attached to the reference euler angles at body position
 	private GameObject m_Menu;
+
+	public GUITexture gt;
+	private bool wasLocked = false;
 	#endregion
 
 	/// <summary>
@@ -84,6 +87,7 @@ public class SceneManager : MonoBehaviour {
 	/// </summary>
 	private void Awake()
 	{
+		gt = GetComponent<GUITexture>();
 		LoadEnvironment();
 
 		// configure in-/ output devices
@@ -103,18 +107,42 @@ public class SceneManager : MonoBehaviour {
 	private void Start ()
 	{
 	}
+
+	void DidLockCursor() {
+		Debug.Log("Locking cursor");
+		gt.enabled = false;
+	}
+	void DidUnlockCursor() {
+		Debug.Log("Unlocking cursor");
+		gt.enabled = true;
+	}
+	void OnMouseDown() {
+		Screen.lockCursor = true;
+	}
 	
 	// Update is called once per frame
 	private void Update () {
-
+		if (Input.GetKeyDown("escape"))
+			Screen.lockCursor = false;
+		
+		if (!Screen.lockCursor && wasLocked)
+		{
+			wasLocked = false;
+			DidUnlockCursor();
+		}
+		else if (Screen.lockCursor && !wasLocked)
+		{
+			wasLocked = true;
+			DidLockCursor();
+		}
 	}
-
+	
 	/// <summary>
 	/// Loads the environment.
 	/// </summary>
 	private void LoadEnvironment()
 	{
-
+		
 	}
 
 	/// <summary>
@@ -286,6 +314,7 @@ public class SceneManager : MonoBehaviour {
 	/// </summary>
 	private void SetUpCamera()
 	{
+		//TODO: add any enhancing effects like global fog, etc.
 	}
 
 
