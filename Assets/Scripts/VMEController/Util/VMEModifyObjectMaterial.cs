@@ -7,23 +7,24 @@ public class VMEModifyObjectMaterial : MonoBehaviour {
 
 	public Transform[] Targets;
 
-	private MeshRenderer[] m_Store;
+	private Renderer[] m_Store;
 	private bool m_Alternator;
-	private Material[] tmpmats;
 
 	// Use this for initialization
 	void Start () {
 		m_Alternator = false;
 
-		// store material list
+		// store in MeshRenderer list
+		this.m_Store = new Renderer[Targets.Length];
+
+		// store original material list
 		for (int i = 0; i < Targets.Length; i++)
 		{
 			if (Targets[i] != null)
 			{
-				// store in MeshRenderer list
-				m_Store = new MeshRenderer[Targets.Length];
 				// create copy
-				m_Store[i] = GameObject.Instantiate<MeshRenderer>(Targets[i].GetComponent<MeshRenderer>());
+				this.m_Store[i] = GameObject.Instantiate<Renderer>(Targets[i].GetComponentInChildren<Renderer>());
+				Debug.Log("Stored " + m_Store[i].name);
 			}
 			else
 			{
@@ -66,11 +67,11 @@ public class VMEModifyObjectMaterial : MonoBehaviour {
 		{
 			for (int i = 0; i < Targets.Length; i++)
 			{
-				tmpmats = new Material[Targets[i].GetComponent<MeshRenderer>().materials.Length];
+				Material[] tmpmats = new Material[Targets[i].GetComponentInChildren<Renderer>().materials.Length];
 				for (int j = 0; j < tmpmats.Length; j++) {
-					tmpmats[j] = ReplacementMat;	
+					tmpmats[j] = ReplacementMat;
 				}
-				Targets[i].GetComponent<MeshRenderer>().sharedMaterials = tmpmats;
+				Targets[i].GetComponentInChildren<Renderer>().materials = tmpmats;
 			}
 		}
 	}
@@ -81,14 +82,12 @@ public class VMEModifyObjectMaterial : MonoBehaviour {
 	private void Reset()
 	{
 		Debug.Log(transform.name + ".Reset()");
-		if (m_Store.Length > 0 && Targets.Length > 0)
+		if (this.m_Store != null && Targets.Length > 0)
 		{
 			for (int i = 0; i < Targets.Length; i++)
 			{
-				if (m_Store[i] != null)
-				{
-					Targets[i].GetComponent<MeshRenderer>().materials = m_Store[i].materials;
-				}
+				Debug.Log("Resetting " + Targets[i].name + " from " + this.m_Store[i].name);
+				Targets[i].GetComponentInChildren<Renderer>().materials = this.m_Store[i].materials;
 			}
 		}
 	}

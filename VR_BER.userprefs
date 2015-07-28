@@ -1,18 +1,9 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/VMEController/Util/VMEModifyObjectMaterial.cs">
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench ActiveDocument="../../BitBucket/twitter-search-with-unity/Assets/Scripts/Main.cs">
     <Files>
-      <File FileName="Assets/Scripts/VMEController/Util/VMEToggleRender.cs" Line="6" Column="29" />
-      <File FileName="Assets/Scripts/VMEController/Util/VMEObjectAction.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/VMEController/Util/VMEFocusTimer.cs" Line="1" Column="1" />
-      <File FileName="Assets/Shaders/VME/VMEOutline bumped.shader" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/VMEController/Util/VMEMenu.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/VMEController/Util/VMEMoveObjects.cs" Line="1" Column="1" />
-      <File FileName="Assets/Shaders/VME/VMEOutline.shader" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/VMEController/Util/VMENextSpot.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/VMEController/Util/VMECameraRayTracker.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/SceneManager.cs" Line="225" Column="28" />
-      <File FileName="Assets/Scripts/VMEController/Util/VMEModifyObjectMaterial.cs" Line="80" Column="100" />
+      <File FileName="../../BitBucket/twitter-search-with-unity/Assets/Scripts/TwitterAPI.cs" Line="178" Column="1" />
+      <File FileName="../../BitBucket/twitter-search-with-unity/Assets/Scripts/Main.cs" Line="10" Column="49" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

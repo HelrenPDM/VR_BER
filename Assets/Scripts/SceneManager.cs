@@ -255,7 +255,7 @@ public class SceneManager : MonoBehaviour {
 
 			if (body)
 			{
-				SetUpUI(m_Player.transform, "Menu", 0f, -0.7f, 0.5f);
+				//SetUpUI(m_Player.transform, "Menu", 0f, -0.7f, 0.5f);
 
 				Debug.Log("Correcting body height.");
 				var q = new Vector3(0f,PlayerHeight,0f);
