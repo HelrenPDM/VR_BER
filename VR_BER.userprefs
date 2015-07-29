@@ -1,9 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../../BitBucket/twitter-search-with-unity/Assets/Scripts/Main.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/SceneManager.cs">
     <Files>
-      <File FileName="../../BitBucket/twitter-search-with-unity/Assets/Scripts/TwitterAPI.cs" Line="178" Column="1" />
-      <File FileName="../../BitBucket/twitter-search-with-unity/Assets/Scripts/Main.cs" Line="10" Column="49" />
+      <File FileName="Assets/Scripts/SceneManager.cs" Line="133" Column="53" />
+      <File FileName="Assets/Scripts/VMELoadScene.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/VMEController/Util/VMEObjectAction.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

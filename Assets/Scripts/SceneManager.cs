@@ -76,7 +76,7 @@ public class SceneManager : MonoBehaviour {
 	// the heads up display attached to the parent camera (main or left eye)
 	private GameObject m_HUD;
 	// the menu attached to the reference euler angles at body position
-	private GameObject m_Menu;
+	// private GameObject m_Menu;
 
 	public GUITexture gt;
 	private bool wasLocked = false;
@@ -98,7 +98,7 @@ public class SceneManager : MonoBehaviour {
 		SetUpController(OVRControllerPrefab, "CenterEyeAnchor", VMEStart, UseBody);
 		#elif UNITY_ANDROID
 		SetUpController(CardboardControllerPrefab, "Main Camera", VMEStart, UseBody);
-		#elif UNITY_EDITOR && UNITY_WEBGL
+		#elif UNITY_EDITOR || UNITY_WEBGL || UNITY_WEBPLAYER
 		SetUpController(StandardController, "StandardCamera", VMEStart, UseBody);
 		#endif
 	}
@@ -117,20 +117,20 @@ public class SceneManager : MonoBehaviour {
 		gt.enabled = true;
 	}
 	void OnMouseDown() {
-		Screen.lockCursor = true;
+		Cursor.lockState = CursorLockMode.Locked;
 	}
 	
 	// Update is called once per frame
 	private void Update () {
 		if (Input.GetKeyDown("escape"))
-			Screen.lockCursor = false;
+			Cursor.lockState = CursorLockMode.None;
 		
-		if (!Screen.lockCursor && wasLocked)
+		if (Cursor.lockState == CursorLockMode.None && wasLocked)
 		{
 			wasLocked = false;
 			DidUnlockCursor();
 		}
-		else if (Screen.lockCursor && !wasLocked)
+		else if (Cursor.lockState == CursorLockMode.Locked && !wasLocked)
 		{
 			wasLocked = true;
 			DidLockCursor();
@@ -150,8 +150,9 @@ public class SceneManager : MonoBehaviour {
 	/// </summary>
 	private void DetectDevices()
 	{
-		var parms = new Ovr.InitParams();
 	#if UNITY_STANDALONE
+		var parms = new Ovr.InitParams();
+
 		Debug.Log ("OVR HMD Count: " + Ovr.Hmd.Detect().ToString());
 		// detect OVR device
 		if (Ovr.Hmd.Detect() > 0)
@@ -195,7 +196,7 @@ public class SceneManager : MonoBehaviour {
 			#elif UNITY_STANDALONE
 			Debug.Log ("Trying to instantiate " + controllerGO);
 			this.m_Player = GameObject.Instantiate(Resources.Load (controllerGO) as GameObject);
-			this.m_Player.GetComponent<OVRPlayerController>().HmdRotatesY = false;	
+			this.m_Player.GetComponent<OVRPlayerController>().HmdRotatesY = true;	
 			
 			if (GameObject.Find("StandardCamera") != null)
 			{
