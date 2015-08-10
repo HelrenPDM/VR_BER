@@ -25,6 +25,7 @@ public class VMEModifyObjectMaterial : MonoBehaviour {
 				// create copy
 				this.m_Store[i] = GameObject.Instantiate<Renderer>(Targets[i].GetComponentInChildren<Renderer>());
 				Debug.Log("Stored " + m_Store[i].name);
+				m_Store[i].enabled = false;
 			}
 			else
 			{

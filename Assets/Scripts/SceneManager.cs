@@ -78,8 +78,7 @@ public class SceneManager : MonoBehaviour {
 	// the menu attached to the reference euler angles at body position
 	// private GameObject m_Menu;
 
-	public GUITexture gt;
-	private bool wasLocked = false;
+	CursorLockMode wantedMode;
 	#endregion
 
 	/// <summary>
@@ -87,7 +86,6 @@ public class SceneManager : MonoBehaviour {
 	/// </summary>
 	private void Awake()
 	{
-		gt = GetComponent<GUITexture>();
 		LoadEnvironment();
 
 		// configure in-/ output devices
@@ -107,36 +105,61 @@ public class SceneManager : MonoBehaviour {
 	private void Start ()
 	{
 	}
-
-	void DidLockCursor() {
-		Debug.Log("Locking cursor");
-		gt.enabled = false;
-	}
-	void DidUnlockCursor() {
-		Debug.Log("Unlocking cursor");
-		gt.enabled = true;
-	}
-	void OnMouseDown() {
-		Cursor.lockState = CursorLockMode.Locked;
-	}
 	
 	// Update is called once per frame
 	private void Update () {
-		if (Input.GetKeyDown("escape"))
-			Cursor.lockState = CursorLockMode.None;
-		
-		if (Cursor.lockState == CursorLockMode.None && wasLocked)
-		{
-			wasLocked = false;
-			DidUnlockCursor();
-		}
-		else if (Cursor.lockState == CursorLockMode.Locked && !wasLocked)
-		{
-			wasLocked = true;
-			DidLockCursor();
-		}
 	}
-	
+
+	// Apply requested cursor state
+	void SetCursorState ()
+	{
+		Cursor.lockState = wantedMode;
+		// Hide cursor when locking
+		Cursor.visible = (CursorLockMode.Locked != wantedMode);
+	}	
+
+	#if UNITY_WEBGL || UNITY_WEBPLAYER
+	/// <summary>
+	/// Raises the GUI event.
+	/// </summary>
+	void OnGUI ()
+	{
+		GUILayout.BeginVertical ();
+		// Release cursor on escape keypress
+		if (Input.GetKeyDown (KeyCode.Escape))
+			Cursor.lockState = wantedMode = CursorLockMode.None;
+		
+		switch (Cursor.lockState)
+		{
+		case CursorLockMode.None:
+			GUILayout.Label ("Cursor is normal");
+			if (GUILayout.Button ("Lock cursor"))
+				wantedMode = CursorLockMode.Locked;
+			if (GUILayout.Button ("Confine cursor"))
+				wantedMode = CursorLockMode.Confined;
+			break;
+		case CursorLockMode.Confined:
+			GUILayout.Label ("Cursor is confined");
+			if (GUILayout.Button ("Lock cursor"))
+				wantedMode = CursorLockMode.Locked;
+			if (GUILayout.Button ("Release cursor"))
+				wantedMode = CursorLockMode.None;
+			break;
+		case CursorLockMode.Locked:
+			GUILayout.Label ("Cursor is locked");
+			if (GUILayout.Button ("Unlock cursor"))
+				wantedMode = CursorLockMode.None;
+			if (GUILayout.Button ("Confine cursor"))
+				wantedMode = CursorLockMode.Confined;
+			break;
+		}
+		
+		GUILayout.EndVertical ();
+		
+		SetCursorState ();
+	}
+	#endif
+
 	/// <summary>
 	/// Loads the environment.
 	/// </summary>
@@ -196,7 +219,7 @@ public class SceneManager : MonoBehaviour {
 			#elif UNITY_STANDALONE
 			Debug.Log ("Trying to instantiate " + controllerGO);
 			this.m_Player = GameObject.Instantiate(Resources.Load (controllerGO) as GameObject);
-			this.m_Player.GetComponent<OVRPlayerController>().HmdRotatesY = true;	
+			this.m_Player.GetComponent<OVRPlayerController>().HmdRotatesY = true;
 			
 			if (GameObject.Find("StandardCamera") != null)
 			{
@@ -217,6 +240,12 @@ public class SceneManager : MonoBehaviour {
 				Debug.Log("SceneManager: VMEPlayerController added to Player");
 			}
 
+			Camera[] cams = this.m_Player.GetComponentsInChildren<Camera>();
+			foreach (Camera cam in cams)
+			{
+				cam.farClipPlane = 6000;
+			}
+
 			if (body)
 			{
 				this.m_Player.GetComponent<VMEPlayerController>().MoveMode = true;
@@ -233,7 +262,7 @@ public class SceneManager : MonoBehaviour {
 
 			SetUpUI(m_CameraRig.transform, "HUD", 0f, 0f, 0.5f);
 
-			UpdateController(locationGO, body);
+			UpdateController(locationGO, body, Vector3.zero);
 		}
 	}
 
@@ -242,7 +271,7 @@ public class SceneManager : MonoBehaviour {
 	/// </summary>
 	/// <param name="locationGO">Location G.</param>
 	/// <param name="body">If set to <c>true</c> body.</param>
-	private void UpdateController(Transform locationGO, bool body)
+	private void UpdateController(Transform locationGO, bool body, Vector3 lookAt)
 	{
 		if (m_Player != null)
 		{	
@@ -253,11 +282,10 @@ public class SceneManager : MonoBehaviour {
 			          " Y: " + p.y +
 			          " Z: " + p.z);
 			m_Player.transform.position = p;
+			//m_Player.transform.LookAt(lookAt);
 
 			if (body)
 			{
-				//SetUpUI(m_Player.transform, "Menu", 0f, -0.7f, 0.5f);
-
 				Debug.Log("Correcting body height.");
 				var q = new Vector3(0f,PlayerHeight,0f);
 				m_CameraRig.transform.position = p + q;
@@ -329,7 +357,7 @@ public class SceneManager : MonoBehaviour {
 			Debug.Log("SceneManager: NavMeshAgent removed from Player");
 		}
 		// configure character controller
-		UpdateController(args.NextSpot, args.NextBody);
+		UpdateController(args.NextSpot, args.NextBody, args.LookAt);
 	}
 
 }
