@@ -67,19 +67,11 @@ public class VMEPlayerController : MonoBehaviour {
 
 		DebugInGUI("");
 
-		#if UNITY_ANDROID && !UNITY_STANDALONE
 		m_PlayerController = gameObject.GetComponent<CharacterController>();
 		if(m_PlayerController == null)
 			Debug.LogWarning("VMEPlayerController: No CharacterController attached.");
-		#else
-		m_PlayerController = gameObject.GetComponent<CharacterController>();
-		if(m_PlayerController == null)
-			Debug.LogWarning("VMEPlayerController: No CharacterController attached.");
-		#endif
 
-		#if UNITY_STANDALONE
-		m_CameraRig = GameObject.Find("OVRCameraRig").GetComponent<OVRCameraRig>().leftEyeCamera;
-		#elif UNITY_ANDROID
+		#if UNITY_ANDROID
 		m_CameraRig = GameObject.Find("Main Camera Left").GetComponent<Camera>();
 		#else
 		Camera[] CameraRigs = transform.GetComponentsInChildren<Camera>();
@@ -205,13 +197,6 @@ public class VMEPlayerController : MonoBehaviour {
 	{
 		if (HaltUpdateMovement)
 			return;
-
-		#if UNITY_ANDROID && !UNITY_EDITOR
-		if (m_PlayerController.GetComponent<Cardboard>().UpdateState())
-		{
-			m_PlayerController.transform.rotation = m_PlayerController.GetComponent<Cardboard>().HeadRotation;
-		}
-		#endif
 	}
 
 	

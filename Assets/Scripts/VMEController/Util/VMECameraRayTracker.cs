@@ -198,7 +198,6 @@ public class VMECameraRayTracker {
 			SceneEventArgs args = new SceneEventArgs();
 			args.NextSpot = go.GetComponent<VMENextSpot>().nextSpot;
 			args.NextBody = go.GetComponent<VMENextSpot>().nextBody;
-			args.LookAt = go.GetComponent<VMENextSpot>().lookAt;
 			OnSceneEvent(args);
 			break;
 		case "TriggerObject":

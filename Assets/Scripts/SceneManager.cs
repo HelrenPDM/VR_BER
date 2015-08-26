@@ -43,9 +43,6 @@ public class SceneManager : MonoBehaviour {
 
 	#region subsystem managers
 
-	#if UNITY_STANDALONE
-	public string OVRControllerPrefab = "OVR/Prefabs/OVRPlayerController";
-	#endif
 
 	#if UNITY_ANDROID
 	/// <summary>
@@ -92,11 +89,9 @@ public class SceneManager : MonoBehaviour {
 		DetectDevices();
 
 		// configure character controller
-		#if UNITY_STANDALONE
-		SetUpController(OVRControllerPrefab, "CenterEyeAnchor", VMEStart, UseBody);
-		#elif UNITY_ANDROID
+		#if UNITY_ANDROID
 		SetUpController(CardboardControllerPrefab, "Main Camera", VMEStart, UseBody);
-		#elif UNITY_EDITOR || UNITY_WEBGL || UNITY_WEBPLAYER
+		#else
 		SetUpController(StandardController, "StandardCamera", VMEStart, UseBody);
 		#endif
 	}
@@ -165,7 +160,6 @@ public class SceneManager : MonoBehaviour {
 	/// </summary>
 	private void LoadEnvironment()
 	{
-		
 	}
 
 	/// <summary>
@@ -173,23 +167,6 @@ public class SceneManager : MonoBehaviour {
 	/// </summary>
 	private void DetectDevices()
 	{
-	#if UNITY_STANDALONE
-		var parms = new Ovr.InitParams();
-
-		Debug.Log ("OVR HMD Count: " + Ovr.Hmd.Detect().ToString());
-		// detect OVR device
-		if (Ovr.Hmd.Detect() > 0)
-		{
-			Debug.Log ("Detected OVR Version " + Ovr.Hmd.GetVersionString() + "!");
-			Ovr.Hmd.Initialize(parms);
-		} else if (Ovr.Hmd.Detect() == 0)
-		{
-			Debug.Log ("No OVR Device detected!");
-		} else if (Ovr.Hmd.Detect() == -1)
-		{
-			Debug.Log ("OVR service unreachable!");
-		}
-	#endif
 	}
 
 	/// <summary>
@@ -212,15 +189,6 @@ public class SceneManager : MonoBehaviour {
 			this.m_Player.GetComponent<Cardboard>().AutoDriftCorrection = true;
 			this.m_Player.AddComponent<CharacterController>();
 
-			if (GameObject.Find("StandardCamera") != null)
-			{
-				GameObject.Find("StandardCamera").SetActive(false);
-			}
-			#elif UNITY_STANDALONE
-			Debug.Log ("Trying to instantiate " + controllerGO);
-			this.m_Player = GameObject.Instantiate(Resources.Load (controllerGO) as GameObject);
-			this.m_Player.GetComponent<OVRPlayerController>().HmdRotatesY = true;
-			
 			if (GameObject.Find("StandardCamera") != null)
 			{
 				GameObject.Find("StandardCamera").SetActive(false);
@@ -282,7 +250,6 @@ public class SceneManager : MonoBehaviour {
 			          " Y: " + p.y +
 			          " Z: " + p.z);
 			m_Player.transform.position = p;
-			//m_Player.transform.LookAt(lookAt);
 
 			if (body)
 			{
