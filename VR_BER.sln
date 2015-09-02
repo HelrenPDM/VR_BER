@@ -1,9 +1,9 @@
-﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp", "Assembly-CSharp.csproj", "{2F0964D1-AAE9-18EA-66D3-52B5ED22CB3E}"
+# Visual Studio 2008
+
+Project("{26353C84-B413-DAEC-077A-8FD54D8A6828}") = "VR_BER", "Assembly-CSharp.csproj", "{2F0964D1-AAE9-18EA-66D3-52B5ED22CB3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Assembly-CSharp-Editor", "Assembly-CSharp-Editor.csproj", "{C31EB020-5403-558F-EDEB-32DD04066E0E}"
+Project("{26353C84-B413-DAEC-077A-8FD54D8A6828}") = "VR_BER", "Assembly-CSharp-Editor.csproj", "{C31EB020-5403-558F-EDEB-32DD04066E0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -20,7 +20,10 @@ Global
 		{C31EB020-5403-558F-EDEB-32DD04066E0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C31EB020-5403-558F-EDEB-32DD04066E0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(MonoDevelopProperties) = preSolution
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+					GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1
@@ -38,7 +41,5 @@ Global
 		$3.inheritsScope = text/plain
 		$3.scope = text/plain
 	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
+
 EndGlobal
