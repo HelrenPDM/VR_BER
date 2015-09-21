@@ -1,11 +1,10 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../AuthorVR/Assets/Scripts/Twitter/TwitterToggle.js">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/SceneManager.cs">
     <Files>
-      <File FileName="../AuthorVR/Assets/Scripts/Twitter/TwitterChannel.cs" Line="19" Column="17" />
-      <File FileName="../AuthorVR/Assets/Scripts/FaderChannel.cs" Line="85" Column="24" />
-      <File FileName="../AuthorVR/Assets/Scripts/ChannelManager.cs" Line="62" Column="4" />
-      <File FileName="../AuthorVR/Assets/Scripts/Twitter/TwitterToggle.js" Line="17" Column="35" />
+      <File FileName="Assets/Scripts/VMEController/Util/VMECameraRig.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/SceneManager.cs" Line="293" Column="8" />
+      <File FileName="Assets/Scripts/VMEController/Util/VMEPlayerController.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

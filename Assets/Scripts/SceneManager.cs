@@ -255,7 +255,11 @@ public class SceneManager : MonoBehaviour {
 			{
 				Debug.Log("Correcting body height.");
 				var q = new Vector3(0f,PlayerHeight,0f);
+				#if UNITY_STANDALONE || UNITY_STANDALONE_OSX
+				m_Player.transform.position = p + q;
+				#else
 				m_CameraRig.transform.position = p + q;
+				#endif
 
 				if (m_NavAgent == null)
 				{
@@ -284,7 +288,11 @@ public class SceneManager : MonoBehaviour {
 	/// <param name="agent">Agent.</param>
 	private void CheckNavMeshAgent(NavMeshAgent agent)
 	{
+		#if UNITY_STANDALONE || UNITY_STANDALONE_OSX
+		agent.baseOffset = 1.7f;
+		#else
 		agent.baseOffset = 0.1f;
+		#endif
 		agent.autoTraverseOffMeshLink = true;
 		agent.updateRotation = false;
 		agent.height = 1.8f;
