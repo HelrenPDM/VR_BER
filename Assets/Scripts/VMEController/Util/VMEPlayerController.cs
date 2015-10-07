@@ -27,7 +27,8 @@ using System;
 /// Controls the player's movement in virtual reality using a set of visual observations, like rays hitting objects and tilt information.
 /// </summary>
 [RequireComponent(typeof(CharacterController))]
-public class VMEPlayerController : MonoBehaviour {
+public class VMEPlayerController : MonoBehaviour
+{
 
 	#region PlayerController variables
 	private bool  SkipMouseRotation = true;
@@ -40,7 +41,7 @@ public class VMEPlayerController : MonoBehaviour {
 	#endregion
 
 	// visual ray tracking handle
-	public VMECameraRayTracker CenterRayTracker = new VMECameraRayTracker();
+	public VMECameraRayTracker CenterRayTracker = new VMECameraRayTracker ();
 
 	// for input modes
 	public bool MoveMode = false;
@@ -58,36 +59,35 @@ public class VMEPlayerController : MonoBehaviour {
 	private GazePointer m_FocusGazePointer = null;
 
 	// Use this for initialization
-	void Start () {
+	void Start ()
+	{
 
-		m_FocusObjectText = GameObject.Find("FocusObjectText3D").GetComponent<TextMesh>();
-		m_DebugText = GameObject.Find("DebugText3D").GetComponent<TextMesh>();
-		m_MoveModeText = GameObject.Find("MoveModeText3D").GetComponent<TextMesh>();
-		m_FocusGazePointer = GameObject.Find("FocusGazePointer").GetComponent<GazePointer>();
+		m_FocusObjectText = GameObject.Find ("FocusObjectText3D").GetComponent<TextMesh> ();
+		//m_DebugText = GameObject.Find ("DebugText3D").GetComponent<TextMesh> ();
+		//m_MoveModeText = GameObject.Find ("MoveModeText3D").GetComponent<TextMesh> ();
+		m_FocusGazePointer = GameObject.Find ("FocusGazePointer").GetComponent<GazePointer> ();
 
-		DebugInGUI("");
+		//DebugInGUI ("");
 
-		m_PlayerController = gameObject.GetComponent<CharacterController>();
-		if(m_PlayerController == null)
-			Debug.LogWarning("VMEPlayerController: No CharacterController attached.");
+		m_PlayerController = gameObject.GetComponent<CharacterController> ();
+		if (m_PlayerController == null)
+			Debug.LogWarning ("VMEPlayerController: No CharacterController attached.");
 
 		#if UNITY_ANDROID
 		m_CameraRig = GameObject.Find("Main Camera Left").GetComponent<Camera>();
 		#else
-		Camera[] CameraRigs = transform.GetComponentsInChildren<Camera>();
+		Camera[] CameraRigs = transform.GetComponentsInChildren<Camera> ();
 		
-		if(CameraRigs.Length == 0)
-			Debug.LogWarning("VMEPlayerController: No Camera attached.");
-		else if (CameraRigs.Length > 1)
-		{
-			Debug.LogWarning("VMEPlayerController: More then 1 Camera attached.");
-			m_CameraRig = CameraRigs[0]; //still take the first
-		}
-		else
-			m_CameraRig = CameraRigs[0];
+		if (CameraRigs.Length == 0)
+			Debug.LogWarning ("VMEPlayerController: No Camera attached.");
+		else if (CameraRigs.Length > 1) {
+			Debug.LogWarning ("VMEPlayerController: More then 1 Camera attached.");
+			m_CameraRig = CameraRigs [0]; //still take the first
+		} else
+			m_CameraRig = CameraRigs [0];
 		
-		if(!m_CameraRig.isActiveAndEnabled)
-			Debug.LogWarning("VMEPlayerController: No Camera attached.");
+		if (!m_CameraRig.isActiveAndEnabled)
+			Debug.LogWarning ("VMEPlayerController: No Camera attached.");
 		#endif
 
 		Debug.Log ("CameraRig set to " + m_CameraRig.name);
@@ -100,81 +100,67 @@ public class VMEPlayerController : MonoBehaviour {
 	/// </summary>
 	protected void Update ()
 	{
-		MoveModeInGUI(this.MoveMode);
+		//MoveModeInGUI (this.MoveMode);
 		// Check for an object ray hit in center viewpath (x=0.5f,y=0.5f)
 		CenterRayTracker.FireRay ();
 
-		if (CenterRayTracker.TargetObject != null)
-		{
-			if (CenterRayTracker.TargetObject.layer == 8)
-			{
-				FocusObjectInGUI(CenterRayTracker.TargetObjectName);
-				if (!CenterRayTracker.TargetObject.CompareTag("Hover"))
-				{
-					GazePointerColor(CenterRayTracker.FocusLockPercentage, 1f);
+		if (CenterRayTracker.TargetObject != null) {
+			if (CenterRayTracker.TargetObject.layer == 8) {
+				FocusObjectInGUI (CenterRayTracker.TargetObjectName);
+				if (!CenterRayTracker.TargetObject.CompareTag ("Hover")) {
+					GazePointerColor (CenterRayTracker.FocusLockPercentage, 1f);
+				} else {
+					GazePointerColor (1, 1f);
 				}
-				else
-				{
-					GazePointerColor(1, 1f);
-				}
-			}
-			else
-			{
-				FocusObjectInGUI("");
-				GazePointerColor(0.5f, 0f);
+			} else {
+				FocusObjectInGUI ("");
+				GazePointerColor (0.5f, 0f);
 			}
 
-			GazePointerPositionAndScale(CenterRayTracker.TargetObjectHitPoint,
+			GazePointerPositionAndScale (CenterRayTracker.TargetObjectHitPoint,
 			                            CenterRayTracker.TargetObjectDistance);
-		}
-		else
-		{
-			FocusObjectInGUI("");
-			GazePointerColor(CenterRayTracker.FocusLockPercentage, 0f);
+		} else {
+			FocusObjectInGUI ("");
+			GazePointerColor (CenterRayTracker.FocusLockPercentage, 0f);
 		}
 
 		if (CenterRayTracker.TargetObject != null &&
-		    CenterRayTracker.TargetObjectFocusLocked)
-		{
-			if (!this.MoveMode)
-			{
+			CenterRayTracker.TargetObjectFocusLocked) {
+			if (!this.MoveMode) {
 				// If there is a hit and object ray hit is set to trigger movement, trigger going forward
-				if (CenterRayTracker.TargetObject.CompareTag ("UIButton3D"))
-				{
-					switch (CenterRayTracker.TargetObjectName)
-					{
-						case "Continue":
-							break;
-						default:
-							break;
+				if (CenterRayTracker.TargetObject.CompareTag ("UIButton3D")) {
+					switch (CenterRayTracker.TargetObjectName) {
+					case "Continue":
+						break;
+					default:
+						break;
 					}
 				}
-			}
-			else
-			{
-				if (m_Agent == null)
-				{
-					m_Agent = gameObject.GetComponent<NavMeshAgent>();
+			} else {
+				if (m_Agent == null) {
+					m_Agent = gameObject.GetComponent<NavMeshAgent> ();
 				}
 				// If there is a hit and object ray hit is set to trigger movement, trigger going forward
-				if (CenterRayTracker.TargetObject.CompareTag ("UIButton3D"))
-				{
-					switch (CenterRayTracker.TargetObjectName)
-					{
+				if (CenterRayTracker.TargetObject.CompareTag ("UIButton3D")) {
+					switch (CenterRayTracker.TargetObjectName) {
 					case "Continue":
-						this.ScriptTarget = CenterRayTracker.TargetObject.GetComponent<VMENextInfoPoint>().target;
-						DebugInGUI ("NextStop: \n" + this.ScriptTarget);
+						this.ScriptTarget = CenterRayTracker.TargetObject.GetComponent<VMENextInfoPoint> ().target;
+						//DebugInGUI ("NextStop: \n" + this.ScriptTarget);
 						m_Agent.destination = this.ScriptTarget.position;
 						break;
 					default:
 						break;
 					}
 				}
+				if (CenterRayTracker.TargetObject.CompareTag ("TriggerInfoBox")) {
+					this.ScriptTarget = CenterRayTracker.TargetObject.GetComponent<VMENextInfoPoint> ().target;
+					//DebugInGUI ("NextStop: \n" + this.ScriptTarget);
+					m_Agent.destination = this.ScriptTarget.position;
+				}
 				// If there is a hit and object ray hit is set to trigger script, trigger going towards target
-				if (CenterRayTracker.TargetObject.CompareTag ("TriggerScripted"))
-				{
+				if (CenterRayTracker.TargetObject.CompareTag ("TriggerScripted")) {
 					this.ScriptTarget = CenterRayTracker.TargetObject.transform;
-					DebugInGUI ("NextStop: \n" + this.ScriptTarget);
+					//DebugInGUI ("NextStop: \n" + this.ScriptTarget);
 					m_Agent.destination = this.ScriptTarget.position;
 				}
 			}
@@ -184,16 +170,16 @@ public class VMEPlayerController : MonoBehaviour {
 	/// <summary>
 	/// Moves the CC forward.
 	/// </summary>
-	private void MoveForward()
+	private void MoveForward ()
 	{
 		//TODO: Well, yes. Let's implement this for any practical free forward movement
-		throw new NotImplementedException();
+		throw new NotImplementedException ();
 	}
 
 	/// <summary>
 	/// Updates the orientation.
 	/// </summary>
-	void LateUpdate()
+	void LateUpdate ()
 	{
 		if (HaltUpdateMovement)
 			return;
@@ -204,7 +190,7 @@ public class VMEPlayerController : MonoBehaviour {
 	/// Starts the scripted flight.
 	/// </summary>
 	/// <param name="target">Target.</param>
-	void ScriptedMovement(Transform target)
+	void ScriptedMovement (Transform target)
 	{
 		if (HaltUpdateMovement)
 			return;
@@ -214,7 +200,7 @@ public class VMEPlayerController : MonoBehaviour {
 	/// Debug message GUI
 	/// </summary>
 	/// <param name="msg">Message.</param>
-	private void DebugInGUI(string msg)
+	private void DebugInGUI (string msg)
 	{
 		m_DebugText.text = msg;
 	}
@@ -223,7 +209,7 @@ public class VMEPlayerController : MonoBehaviour {
 	/// FO text in GUI
 	/// </summary>
 	/// <param name="msg">Message.</param>
-	private void FocusObjectInGUI(string msg)
+	private void FocusObjectInGUI (string msg)
 	{
 		m_FocusObjectText.text = msg;
 	}
@@ -232,9 +218,9 @@ public class VMEPlayerController : MonoBehaviour {
 	/// MM text in GUI
 	/// </summary>
 	/// <param name="msg">If set to <c>true</c> message.</param>
-	private void MoveModeInGUI(bool msg)
+	private void MoveModeInGUI (bool msg)
 	{
-		m_MoveModeText.text = "MoveMode " + msg.ToString();
+		m_MoveModeText.text = "MoveMode " + msg.ToString ();
 	}
 
 	/// <summary>
@@ -242,9 +228,9 @@ public class VMEPlayerController : MonoBehaviour {
 	/// </summary>
 	/// <param name="color">Color.</param>
 	/// <param name="alpha">Alpha.</param>
-	private void GazePointerColor(float color, float alpha)
+	private void GazePointerColor (float color, float alpha)
 	{
-		m_FocusGazePointer.UpdateColor(color, alpha);
+		m_FocusGazePointer.UpdateColor (color, alpha);
 	}
 
 	/// <summary>
@@ -252,8 +238,8 @@ public class VMEPlayerController : MonoBehaviour {
 	/// </summary>
 	/// <param name="pos">Position.</param>
 	/// <param name="scale">Scale.</param>
-	private void GazePointerPositionAndScale(Vector3 pos, float scale)
+	private void GazePointerPositionAndScale (Vector3 pos, float scale)
 	{
-		m_FocusGazePointer.UpdatePositionAndScale(pos, scale);
+		m_FocusGazePointer.UpdatePositionAndScale (pos, scale);
 	}
 }
