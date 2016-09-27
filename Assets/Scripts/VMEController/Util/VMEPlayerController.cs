@@ -26,18 +26,20 @@ using System;
 /// <summary>
 /// Controls the player's movement in virtual reality using a set of visual observations, like rays hitting objects and tilt information.
 /// </summary>
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent (typeof(CharacterController))]
 public class VMEPlayerController : MonoBehaviour
 {
 
 	#region PlayerController variables
-	private bool  SkipMouseRotation = true;
-	private bool  HaltUpdateMovement = false;
+
+	private bool SkipMouseRotation = true;
+	private bool HaltUpdateMovement = false;
 
 	// prefab handles
 	protected CharacterController m_PlayerController = null;
 	protected Camera m_CameraRig = null;
 	protected NavMeshAgent m_Agent = null;
+
 	#endregion
 
 	// visual ray tracking handle
@@ -74,7 +76,7 @@ public class VMEPlayerController : MonoBehaviour
 			Debug.LogWarning ("VMEPlayerController: No CharacterController attached.");
 
 		#if UNITY_ANDROID
-		m_CameraRig = GameObject.Find("Main Camera Left").GetComponent<Camera>();
+		m_CameraRig = GameObject.Find ("Main Camera").GetComponent<Camera> ();
 		#else
 		Camera[] CameraRigs = transform.GetComponentsInChildren<Camera> ();
 		
@@ -118,14 +120,14 @@ public class VMEPlayerController : MonoBehaviour
 			}
 
 			GazePointerPositionAndScale (CenterRayTracker.TargetObjectHitPoint,
-			                            CenterRayTracker.TargetObjectDistance);
+				CenterRayTracker.TargetObjectDistance);
 		} else {
 			FocusObjectInGUI ("");
 			GazePointerColor (CenterRayTracker.FocusLockPercentage, 0f);
 		}
 
 		if (CenterRayTracker.TargetObject != null &&
-			CenterRayTracker.TargetObjectFocusLocked) {
+		    CenterRayTracker.TargetObjectFocusLocked) {
 			if (!this.MoveMode) {
 				// If there is a hit and object ray hit is set to trigger movement, trigger going forward
 				if (CenterRayTracker.TargetObject.CompareTag ("UIButton3D")) {
