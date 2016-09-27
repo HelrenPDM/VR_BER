@@ -1,34 +1,33 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class VMECanvasButton : MonoBehaviour {
+public class VMECanvasButton : MonoBehaviour
+{
 
-	public RectTransform parent;
-	public float scale = 0.5f;
-
-	private Vector3 sv;
+	public RectTransform rect;
+	public float scale = 1.5f;
 
 	// Use this for initialization
-	void Start () {
-		if (parent == null)
-		{
-			parent = gameObject.GetComponent<RectTransform>();
+	void Start ()
+	{
+		if (rect == null) {
+			rect = gameObject.GetComponent<RectTransform> ();
 		}
-		sv = new Vector3(scale,scale,scale);
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+	{
 	
 	}
 
-	public void ReshapeEnter()
+	public void ReshapeEnter ()
 	{
-		parent.localScale += sv;
+		rect.localScale *= scale;
 	}
 
-	public void ReshapeExit()
+	public void ReshapeExit ()
 	{
-		parent.localScale -= sv;
+		rect.localScale /= scale;
 	}
 }
